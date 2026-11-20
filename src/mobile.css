@@ -1,0 +1,22 @@
+/* Match the usable browser viewport as the phone's address bar expands/collapses. */
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #101414;
+  overscroll-behavior: none;
+}
+#root {
+  height: 100%;
+  height: 100dvh;
+  min-height: 0;
+}
+[role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+[role="button"]:focus-visible {
+  outline: 3px solid #f5f7f0;
+  outline-offset: 2px;
+}

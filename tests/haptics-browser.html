@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Button haptics checks</title>
+<style>
+body{font:18px system-ui;padding:16px;background:#101414;color:#f5f7f0}
+[role=button],button{position:relative;display:block;min-height:52px;padding:16px;margin:8px;border:1px solid #cbed49;border-radius:8px;background:#202626;color:inherit;touch-action:manipulation;box-sizing:border-box}
+#rows{height:200px;overflow:auto;border:1px solid white}
+</style>
+<h1>Button haptics checks</h1>
+<p>Actions: <output id="actions">0</output> · Switch changes: <output id="changes">0</output></p>
+<div role="button" tabindex="0" id="tap">Tap once</div>
+<div role="button" tabindex="0" id="remove">Tap and remove</div>
+<div role="button" tabindex="-1" aria-disabled="true" id="disabled">Disabled action</div>
+<button id="cleanup">Remove feedback overlays</button>
+<p id="cleanup-status">Attached</p>
+<div id="rows" aria-label="Scrollable buttons"></div>
+<script type="module">
+import { attachSwitchHaptics } from './buttonHaptics.js';
+const cleanups=[];
+let actions=0, changes=0;
+const update=()=>{
+  document.getElementById('actions').textContent=String(actions);
+  document.getElementById('changes').textContent=String(changes);
+};
+document.body.addEventListener('change',event=>{if(event.target.matches('input[switch]')){changes++;update();}});
+function wire(button, remove=false){
+  const cleanup=attachSwitchHaptics(button);
+  cleanups.push(cleanup);
+  button.addEventListener('click',()=>{
+    if(button.getAttribute('aria-disabled')==='true')return;
+    actions++;update();
+    if(remove){button.remove();cleanup();}
+  });
+  button.addEventListener('keydown',event=>{
+    if(event.key==='Enter'||event.key===' '){event.preventDefault();button.click();}
+  });
+}
+wire(document.getElementById('tap'));
+wire(document.getElementById('remove'),true);
+wire(document.getElementById('disabled'));
+for(let i=1;i<=20;i++){
+  const row=document.createElement('div');row.id=`row-${i}`;row.role='button';row.tabIndex=0;row.textContent=`Row ${i}`;
+  document.getElementById('rows').append(row);wire(row);
+}
+document.getElementById('cleanup').addEventListener('click',()=>{
+  cleanups.forEach(cleanup=>cleanup());
+  setTimeout(()=>{document.getElementById('cleanup-status').textContent=`Remaining switches: ${document.querySelectorAll('input[switch]').length}`;},0);
+});
+</script>
+</html>

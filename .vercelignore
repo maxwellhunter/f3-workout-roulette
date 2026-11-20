@@ -1,0 +1,9 @@
+node_modules
+.expo
+.git
+.vercel
+.env*
+docs
+tests
+dist
+web-build
