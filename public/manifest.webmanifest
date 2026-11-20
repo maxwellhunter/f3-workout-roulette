@@ -1,0 +1,25 @@
+{
+  "id": "/",
+  "name": "F3 Workout Roulette",
+  "short_name": "F3 Roulette",
+  "description": "Draw an F3 classic, set your reps, and get moving.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#101414",
+  "theme_color": "#101414",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
