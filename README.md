@@ -12,7 +12,7 @@ An independent F3-inspired project. Exercise terminology and adaptations are doc
 
 `vercel.json` configures `npm ci`, `npm run build:web`, the `dist` output directory and the single-page fallback. Production uses Node 24.x. The local `.vercel` project link, dependencies, generated builds, and environment files are ignored by Git.
 
-The initial releases were uploaded directly to Vercel. The GitHub connection and deployment history are recorded in [docs/deployment.md](docs/deployment.md).
+The GitHub repository is connected to the existing Vercel project. Pushing to `main` triggers a production deployment at the live URL above. The GitHub connection and earlier deployment history are recorded in [docs/deployment.md](docs/deployment.md).
 
 ## Local preview
 

@@ -1,6 +1,18 @@
 # Vercel production deployment
 
-## Current release — browser button haptics
+## GitHub source and automatic deployments
+
+Configured November 20, 2026.
+
+- Public repository: https://github.com/maxwellhunter/f3-workout-roulette
+- Production branch: `main`.
+- Existing live app: https://f3-workout-roulette.vercel.app
+- The repository is connected to the existing `f3-workout-roulette` Vercel project. Pushes to `main` trigger production builds with `npm ci` and `npm run build:web`, publishing `dist` on Node 24.x.
+- Initial source commit: `94f5b475bbf32f388a41282ae9c0aa531de69cdc`. It includes the app, assets, tests, sources, license, documentation, and phone previews. Local configuration, environment files, dependencies, and generated builds are excluded.
+- Current code is tracked in its own repository. The direct-upload and uncommitted-workspace notes below describe the earlier releases before the GitHub connection. GitHub commit checks and Vercel deployment history record subsequent build results.
+- TypeScript and lint passed before publication; the application release below also passed all 49 tests and web/iOS/Android exports.
+
+## Latest application change — browser button haptics
 
 Verified November 20, 2026 (America/New_York).
 
