@@ -20,21 +20,35 @@ test('deck has 36 unique, fully described exercises with counts in fives or open
       assert.ok(Number.isInteger(exercise.amount) && exercise.amount > 0);
       assert.equal(exercise.amount % 5, 0, `${exercise.id} must count in fives`);
     }
-    assert.ok(['reps', 'cadence', 'per side', 'count', 'count per side', 'steps', 'distance'].includes(exercise.unit));
+    assert.ok(['reps', 'cadence', 'per side', 'count', 'count per side', 'distance'].includes(exercise.unit));
     assert.doesNotMatch([exercise.description, ...exercise.steps, exercise.counting].join(' '), /timer|seconds|displayed time/i);
   }
 });
 
-test('former timed moves use repetitions, spoken holds, steps, or a chosen crawl distance', () => {
+test('former timed moves use repetitions, spoken holds, or a chosen distance', () => {
   const expected = {
     'flutter-kicks': 'cadence', 'mountain-climbers': 'reps',
     'al-gore': 'count', 'forearm-plank': 'count', 'side-plank': 'count per side',
-    'crab-walk': 'steps', 'rifle-carry': 'steps', 'bear-crawl': 'distance',
+    'crab-walk': 'distance', 'rifle-carry': 'distance', 'bear-crawl': 'distance',
   };
   for (const [id, unit] of Object.entries(expected)) {
     assert.equal(exercises.find((exercise) => exercise.id === id).unit, unit, id);
   }
-  assert.deepEqual(exercises.filter(({ unit }) => unit === 'distance').map(({ id }) => id), ['bear-crawl']);
+});
+
+test('every traveling move uses open distance while stationary movements keep their counts', () => {
+  const travelingIds = ['bear-crawl', 'crab-walk', 'rifle-carry', 'murder-bunnies'];
+  assert.deepEqual(exercises.filter(({ unit }) => unit === 'distance').map(({ id }) => id), travelingIds);
+  for (const exercise of exercises.filter(({ id }) => travelingIds.includes(id))) {
+    assert.equal(exercise.amount, null, exercise.id);
+    assert.ok(exercise.counting.startsWith('Pick your distance.'), exercise.id);
+    assert.doesNotMatch(exercise.counting, /\{amount\}|\{total\}|\{split\}|\d|\breps?\b/i);
+  }
+  for (const id of ['reverse-lunges', 'block-reverse-lunges', 'squat-jumps', 'burpees', 'man-makers']) {
+    const exercise = exercises.find((item) => item.id === id);
+    assert.notEqual(exercise.unit, 'distance', id);
+    assert.ok(exercise.amount > 0, id);
+  }
 });
 
 test('every card is reachable on the first draw, including both range edges', () => {

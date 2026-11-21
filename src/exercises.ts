@@ -13,12 +13,13 @@ export type Exercise = {
   steps: readonly string[];
   counting: string;
 } & (
-  | { amount: number; unit: 'reps' | 'cadence' | 'per side' | 'count' | 'count per side' | 'steps' }
+  | { amount: number; unit: 'reps' | 'cadence' | 'per side' | 'count' | 'count per side' }
   | { amount: null; unit: 'distance' }
 );
 
 // Curated F3 Classics only; warm-ups and general-fitness extras are retired.
 // Doses are app defaults; each card explains its single-count or cadence convention.
+// Traveling movements always use open distance, with no numeric amount.
 // Reference sources and adapted movement variations are documented in SOURCES.md.
 export const exercises: readonly Exercise[] = [
   {
@@ -361,15 +362,15 @@ export const exercises: readonly Exercise[] = [
     "name": "Crab Walk",
     "plainName": "Face-up crawling",
     "category": "Full body",
-    "amount": 20,
-    "unit": "steps",
+    "amount": null,
+    "unit": "distance",
     "description": "Take small steps on your hands and feet with hips lifted.",
     "steps": [
       "Sit with knees bent and hands on the floor behind you, fingers in a comfortable direction.",
       "Lift your hips just off the ground, keeping your shoulders supported.",
-      "Take small steps forward and backward with hands and feet in a clear space."
+      "Choose a clear finish point and take small steps toward it with your hands and feet."
     ],
-    "counting": "Each foot step is 1 count; {amount} total ({split}). Stop if your wrists or shoulders hurt.",
+    "counting": "Pick your distance. Choose a finish point and take controlled steps toward it. Stop if your wrists or shoulders hurt.",
     "equipment": "bodyweight"
   },
   {
@@ -639,15 +640,15 @@ export const exercises: readonly Exercise[] = [
     "name": "Rifle Carry",
     "plainName": "Overhead block carry",
     "category": "Full body",
-    "amount": 20,
-    "unit": "steps",
+    "amount": null,
+    "unit": "distance",
     "description": "Walk with the block held steadily overhead.",
     "steps": [
       "Press the block overhead using a secure two-hand grip and brace your middle.",
       "Keep arms extended and ribs down as you walk slowly along a clear, level path.",
       "Use short, controlled steps; lower the block to your chest before turning or resting."
     ],
-    "counting": "Each footstep is 1 count; walk {amount} short, controlled steps total.",
+    "counting": "Pick your distance. Choose a clear, level path and walk to your finish point with short, controlled steps.",
     "equipment": "block",
     "aliases": [
       "Overhead Carry",
@@ -659,15 +660,15 @@ export const exercises: readonly Exercise[] = [
     "name": "Murder Bunnies",
     "plainName": "Move block, then hop forward",
     "category": "Full body",
-    "amount": 5,
-    "unit": "reps",
+    "amount": null,
+    "unit": "distance",
     "description": "Move the block forward, then hop your feet up beside it.",
     "steps": [
       "On clear, level ground, stand with your feet straddling a block laid flat lengthwise.",
       "Bend your knees and hips, grip the sides, and move the block a short reach forward.",
       "Set it down firmly, brace on it, and hop your feet forward to straddle it again; land softly."
     ],
-    "counting": "One block move and matching hop is 1 rep.",
+    "counting": "Pick your distance. Choose a clear finish point, then repeat the block move and hop until you reach it.",
     "equipment": "block",
     "aliases": [
       "Murder Bunny",

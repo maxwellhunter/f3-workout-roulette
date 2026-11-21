@@ -72,7 +72,6 @@ export function doseUnitLabel(unit: Exercise['unit']): string {
     'per side': 'reps / side',
     count: 'count hold',
     'count per side': 'count / side',
-    steps: 'steps',
     distance: '',
   }[unit];
 }

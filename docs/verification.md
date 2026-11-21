@@ -186,3 +186,11 @@ The no-scroll result applies to the main workout view at the tested sizes and de
 - Corrected Flutter Kicks to four-count cadence for the user's AO. The workout card, Browse, and screen-reader label show “in cadence.” How to explains one kick per beat and one displayed rep per complete “1, 2, 3, ONE” cycle. Rep ranges continue to select complete cycles in multiples of five.
 - At 320 × 568, Browse previewed “20 in cadence”; the card showed 20 IN CADENCE and the instructions matched. Applying a fixed 100 range updated both the card and instructions. Both counts fit the 418px workout area without scrolling.
 - All 47 tests, TypeScript, ESLint, and the production web export pass. No native API or component change was needed. Screenshot: `phone-flutter-cadence.jpg`. The prior single-kick Flutter Kicks verification describes the superseded release.
+
+## All traveling moves use chosen distance — November 21, 2026
+
+- Audited all 36 active exercises. Bear Crawl, Crab Walk, Rifle Carry, and Murder Bunnies are the traveling variations; each now uses “Pick your distance,” a null numeric amount, and finish-point instructions. Stationary reverse lunges return to the starting position and retain reps.
+- Removed the unused numeric steps unit and generalized the rep-range note to traveling moves. The existing distance handling now applies to all four cards, Browse previews, instructions, and accessibility labels. Exercise IDs and saved preferences are unchanged.
+- Passed 48 tests, TypeScript, ESLint, and the production web export. Regression checks cover the complete traveling set, range immunity, absence of stale rep targets, and stationary block/lunge counts.
+- At 320 × 568 with 50–100 reps selected, picked all four through Browse. Every preview and card showed “Pick your distance,” with zero numeric targets and no scrolling in the 418px workout area. Restoring Default kept Murder Bunnies open distance. Switching back to Flutter Kicks restored 20 IN CADENCE.
+- Verified Crab Walk's updated instructions and saved `phone-crab-distance.jpg`. Reset the viewport and reloaded the local preview after verification. Earlier step-count and Murder Bunnies rep-count notes describe superseded releases.

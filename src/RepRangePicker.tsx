@@ -81,7 +81,7 @@ export function RepRangePicker({ value, onChange, disabled = false }: {
           {parsed.error && <Text style={styles.error} accessibilityLiveRegion="polite">{parsed.error}</Text>}
         </View>
       )}
-      <Text style={styles.note}>Counts go in 5s, including holds and steps. Per-side counts apply to each side. Bear Crawl: pick your distance.</Text>
+      <Text style={styles.note}>Reps and hold counts go in 5s. Per-side counts apply to each side. Traveling moves: pick your distance.</Text>
     </View>
   );
 }
