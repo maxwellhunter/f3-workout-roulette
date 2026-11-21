@@ -27,13 +27,22 @@ test('deck has 36 unique, fully described exercises with counts in fives or open
 
 test('former timed moves use repetitions, spoken holds, or a chosen distance', () => {
   const expected = {
-    'flutter-kicks': 'cadence', 'mountain-climbers': 'reps',
+    'flutter-kicks': 'cadence', 'mountain-climbers': 'cadence',
     'al-gore': 'count', 'forearm-plank': 'count', 'side-plank': 'count per side',
     'crab-walk': 'distance', 'rifle-carry': 'distance', 'bear-crawl': 'distance',
   };
   for (const [id, unit] of Object.entries(expected)) {
     assert.equal(exercises.find((exercise) => exercise.id === id).unit, unit, id);
   }
+});
+
+test('the reviewed core and plank moves use cadence without changing other counting modes', () => {
+  assert.deepEqual(exercises.filter(({ unit }) => unit === 'cadence').map(({ id }) => id), [
+    'lbcs', 'american-hammers', 'flutter-kicks', 'bicycle-crunches',
+    'shoulder-taps', 'mountain-climbers', 'plank-jacks', 'peter-parkers',
+  ]);
+  assert.equal(exercises.filter(({ unit }) => unit === 'count' || unit === 'count per side').length, 3);
+  assert.equal(exercises.filter(({ unit }) => unit === 'reps' || unit === 'per side').length, 21);
 });
 
 test('every traveling move uses open distance while stationary movements keep their counts', () => {

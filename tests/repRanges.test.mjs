@@ -56,9 +56,9 @@ test('rep draws reject invalid ranges and random values', () => {
 test('counting instructions follow changed reps and explain uneven alternating totals', () => {
   const lunges = exercises.find(({ id }) => id === 'reverse-lunges');
   assert.equal(countingText({ ...lunges, amount: 30 }), 'Count each leg separately: 30 per side, 60 total.');
-  const hammers = exercises.find(({ id }) => id === 'american-hammers');
-  assert.equal(countingText({ ...hammers, amount: 30 }), 'Each side touch is 1 rep; 30 total (15 per side).');
-  assert.equal(countingText({ ...hammers, amount: 35 }), 'Each side touch is 1 rep; 35 total (18 on the first side, 17 on the other).');
+  const couponLunges = exercises.find(({ id }) => id === 'block-reverse-lunges');
+  assert.equal(countingText({ ...couponLunges, amount: 30 }), 'Each backward lunge and return is 1 rep; 30 total (15 per side).');
+  assert.equal(countingText({ ...couponLunges, amount: 35 }), 'Each backward lunge and return is 1 rep; 35 total (18 on the first side, 17 on the other).');
   for (const exercise of exercises) {
     assert.ok(!countingText(exercise).includes('{'), exercise.id);
     if (exercise.unit === 'distance') continue;
@@ -85,7 +85,7 @@ test('stationary block cards apply count ranges in fives while traveling block c
 test('converted movements explain alternating reps, spoken counts, and open distance', () => {
   for (const [id, expected] of [
     ['flutter-kicks', 'Use four-count cadence: “1, 2, 3, ONE,” then “1, 2, 3, TWO.” Each beat is one alternating kick; each full cycle is 1 rep. Complete 35 reps in cadence.'],
-    ['mountain-climbers', 'Each knee drive is 1 rep; 35 total (18 on the first side, 17 on the other).'],
+    ['mountain-climbers', 'Use four-count cadence: “1, 2, 3, ONE,” then “1, 2, 3, TWO.” Drive the right, left, right, then left knee, returning each leg as the other comes forward. One full cycle is 1 rep; complete 35 reps in cadence.'],
     ['al-gore', 'Hold while counting aloud to 35 at a steady pace. Keep breathing.'],
     ['forearm-plank', 'Hold while counting aloud to 35 at a steady pace; lower your knees if needed.'],
     ['side-plank', 'Count aloud to 35 at a steady pace on each side. Lower and switch sides between holds.'],
@@ -96,5 +96,17 @@ test('converted movements explain alternating reps, spoken counts, and open dist
     const exercise = exercises.find((item) => item.id === id);
     assert.equal(countingText(exercise), exercise.counting);
     assert.match(countingText(exercise), /^Pick your distance\./);
+  }
+});
+
+test('cadence ranges count complete cycles and never split an odd target between sides', () => {
+  for (const exercise of exercises.filter(({ unit }) => unit === 'cadence')) {
+    assert.deepEqual([0, 0.5, 0.99].map((random) => repAmount(exercise, { min: 20, max: 30 }, () => random)), [20, 25, 30]);
+    const amount = repAmount(exercise, { min: 35, max: 35 });
+    assert.equal(amount, 35);
+    const instructions = countingText({ ...exercise, amount });
+    assert.match(instructions, /four-count cadence/);
+    assert.match(instructions, /35 reps in cadence/);
+    assert.doesNotMatch(instructions, /18 on the first side|17 on the other|\{amount\}|\{split\}/);
   }
 });

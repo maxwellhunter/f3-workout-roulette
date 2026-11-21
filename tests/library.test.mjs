@@ -70,10 +70,18 @@ test('dose previews apply the range to reps and holds with the correct unit', ()
   assert.deepEqual(libraryDose(merkins, { min: 50, max: 50 }), { count: '50', unit: 'reps' });
   assert.deepEqual(libraryDose(lunges, { min: 20, max: 30 }), { count: '20–30', unit: 'reps / side' });
   assert.deepEqual(libraryDose(sidePlank, { min: 50, max: 100 }), { count: '50–100', unit: 'count / side' });
-  for (const [id, unit] of [['flutter-kicks', 'in cadence'], ['mountain-climbers', 'reps'], ['al-gore', 'count hold'], ['forearm-plank', 'count hold']]) {
+  for (const [id, unit] of [['flutter-kicks', 'in cadence'], ['mountain-climbers', 'in cadence'], ['al-gore', 'count hold'], ['forearm-plank', 'count hold']]) {
     const exercise = exercises.find((item) => item.id === id);
     assert.deepEqual(libraryDose(exercise, { min: 50, max: 100 }), { count: '50–100', unit });
     assert.deepEqual(libraryDose(exercise, null), { count: String(exercise.amount), unit });
+  }
+});
+
+test('every cadence card previews whole cycles for default, ranged, and fixed targets', () => {
+  for (const exercise of exercises.filter(({ unit }) => unit === 'cadence')) {
+    assert.deepEqual(libraryDose(exercise, null), { count: String(exercise.amount), unit: 'in cadence' });
+    assert.deepEqual(libraryDose(exercise, { min: 20, max: 30 }), { count: '20–30', unit: 'in cadence' });
+    assert.deepEqual(libraryDose(exercise, { min: 35, max: 35 }), { count: '35', unit: 'in cadence' });
   }
 });
 

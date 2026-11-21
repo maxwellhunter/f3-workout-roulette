@@ -44,14 +44,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Small abdominal crunches",
     "category": "Core",
     "amount": 20,
-    "unit": "reps",
+    "unit": "cadence",
     "description": "Lift your shoulder blades in a small, controlled crunch.",
     "steps": [
       "Lie on your back with knees bent and feet flat.",
       "Exhale and curl your ribs toward your hips, lifting just your shoulder blades.",
       "Lower slowly; keep your chin relaxed and do not pull on your neck."
     ],
-    "counting": "One lift and lower is 1 rep.",
+    "counting": "Use four-count cadence: “1, 2, 3, ONE,” then “1, 2, 3, TWO.” Lift, lower, lift, lower across the four beats. One full cycle (two crunches) is 1 rep; complete {amount} reps in cadence.",
     "equipment": "bodyweight",
     "aliases": [
       "Little Baby Crunches"
@@ -63,14 +63,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Seated twists",
     "category": "Core",
     "amount": 20,
-    "unit": "reps",
+    "unit": "cadence",
     "description": "Twist from side to side while seated, with heels down.",
     "steps": [
       "Sit with knees bent, heels on the floor, and hands together.",
       "Lean back a little while keeping your chest lifted.",
       "Rotate your ribs and hands to one side, then the other."
     ],
-    "counting": "Each side touch is 1 rep; {amount} total ({split}).",
+    "counting": "Use four-count cadence: “1, 2, 3, ONE,” then “1, 2, 3, TWO.” Twist left, right, left, right across the four beats. One full cycle is 1 rep; complete {amount} reps in cadence.",
     "equipment": "bodyweight"
   },
   {
@@ -218,14 +218,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Bicycle crunches",
     "category": "Core",
     "amount": 20,
-    "unit": "reps",
+    "unit": "cadence",
     "description": "Bring each knee toward the opposite shoulder with a slow twist.",
     "steps": [
       "Lie on your back with knees lifted and fingertips lightly beside your head.",
       "Turn your ribs toward one knee as the other leg extends.",
       "Return through center and switch, without pulling your neck."
     ],
-    "counting": "Each knee-in is 1 rep; {amount} total ({split}).",
+    "counting": "Use four-count cadence: “1, 2, 3, ONE,” then “1, 2, 3, TWO.” Bring the right knee in, then left, right, left, twisting toward each knee. One full cycle is 1 rep; complete {amount} reps in cadence.",
     "equipment": "bodyweight",
     "aliases": [
       "Freddy Mercury",
@@ -238,14 +238,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Plank shoulder taps",
     "category": "Upper body",
     "amount": 20,
-    "unit": "reps",
+    "unit": "cadence",
     "description": "Tap opposite shoulders from a steady high plank.",
     "steps": [
       "Set hands under shoulders and place feet a little wider than hips.",
       "Lift one hand to tap the opposite shoulder without turning your hips.",
       "Replace your hand and alternate sides."
     ],
-    "counting": "Each tap is 1 rep; {amount} total ({split}).",
+    "counting": "Use four-count cadence: “1, 2, 3, ONE,” then “1, 2, 3, TWO.” Tap with your right hand, replace it, tap with your left hand, replace it. One full cycle is 1 rep; complete {amount} reps in cadence.",
     "equipment": "bodyweight",
     "aliases": [
       "Shoulder Taps"
@@ -295,14 +295,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Plank knee drives",
     "category": "Cardio",
     "amount": 30,
-    "unit": "reps",
+    "unit": "cadence",
     "description": "Alternate knee drives from a high plank.",
     "steps": [
       "Place hands under shoulders and extend both legs.",
       "Bring one knee toward your chest, then send it back.",
       "Alternate knees at a steady pace, keeping hips from bouncing."
     ],
-    "counting": "Each knee drive is 1 rep; {amount} total ({split}).",
+    "counting": "Use four-count cadence: “1, 2, 3, ONE,” then “1, 2, 3, TWO.” Drive the right, left, right, then left knee, returning each leg as the other comes forward. One full cycle is 1 rep; complete {amount} reps in cadence.",
     "equipment": "bodyweight"
   },
   {
@@ -311,14 +311,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Jumping feet in a plank",
     "category": "Full body",
     "amount": 15,
-    "unit": "reps",
+    "unit": "cadence",
     "description": "Move your feet out and in while holding a high plank.",
     "steps": [
       "Set hands under shoulders with your body straight.",
       "Hop both feet apart without dropping your hips.",
       "Hop them back together; step each foot out and in for less impact."
     ],
-    "counting": "One out-and-in cycle is 1 rep.",
+    "counting": "Use four-count cadence: “1, 2, 3, ONE,” then “1, 2, 3, TWO.” Feet out, in, out, in across the four beats. One full cycle (two jacks) is 1 rep; complete {amount} reps in cadence.",
     "equipment": "bodyweight"
   },
   {
@@ -401,14 +401,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Plank knee-to-elbow drives",
     "category": "Core",
     "amount": 20,
-    "unit": "reps",
+    "unit": "cadence",
     "description": "Bring one knee outside toward the same-side elbow, then alternate.",
     "steps": [
       "Start in a high plank with hands below shoulders and your body in a straight line.",
       "Bring your right knee out toward your right elbow without dropping your hips.",
       "Return to plank and repeat on the left; move slowly and alternate sides."
     ],
-    "counting": "Each knee drive is 1 rep; {amount} total ({split}).",
+    "counting": "Use four-count cadence: “1, 2, 3, ONE,” then “1, 2, 3, TWO.” Right knee to right elbow, return to plank, left knee to left elbow, return to plank. One full cycle is 1 rep; complete {amount} reps in cadence.",
     "aliases": [
       "Spiderman Plank"
     ]
