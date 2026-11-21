@@ -23,5 +23,5 @@ const styles = StyleSheet.create({
   notice: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   message: { flex: 1, color: '#FFD5B5', fontSize: 14, lineHeight: 20 },
   retry: { minHeight: 52, minWidth: 64, borderWidth: 1, borderColor: colors.line, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
-  retryText: { color: colors.accent, fontSize: 16, fontWeight: '800' },
+  retryText: { color: colors.ink, fontSize: 16, fontWeight: '800' },
 });

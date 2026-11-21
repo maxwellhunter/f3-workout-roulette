@@ -29,7 +29,7 @@ export function LandingScreen({ deckCount, equipmentName, favoritesOnly, status,
         <View style={styles.intro}>
           <Text accessibilityRole="header" style={[styles.headline, compact && styles.compactHeadline]}>
             {needsDeck ? 'YOUR DECK.\n' : 'SHOW UP.\n'}
-            <Text style={styles.accent}>{needsDeck ? 'YOUR RULES.' : 'SHAKE IT UP.'}</Text>
+            <Text>{needsDeck ? 'YOUR RULES.' : 'SHAKE IT UP.'}</Text>
           </Text>
           <Text style={[styles.subtitle, compact && styles.compactSubtitle]}>
             {status === 'empty'
@@ -90,19 +90,18 @@ const styles = StyleSheet.create({
   intro: { gap: 10 },
   headline: { color: colors.ink, fontSize: 48, lineHeight: 48, fontWeight: '900', letterSpacing: -1.7 },
   compactHeadline: { fontSize: 34, lineHeight: 35, letterSpacing: -1.2 },
-  accent: { color: colors.accent },
   subtitle: { color: colors.muted, fontSize: 17, lineHeight: 24 },
   compactSubtitle: { fontSize: 15, lineHeight: 22 },
   stage: { flexGrow: 1, minHeight: 270, alignItems: 'center', justifyContent: 'center', marginHorizontal: 10 },
   compactStage: { minHeight: 196, marginHorizontal: 8 },
   backCard: { position: 'absolute', width: '86%', height: 216, borderRadius: 18, borderWidth: 1 },
-  farCard: { backgroundColor: '#26332A', borderColor: '#526744', transform: [{ rotate: '-12deg' }, { translateX: -7 }] },
+  farCard: { backgroundColor: colors.surface, borderColor: colors.line, transform: [{ rotate: '-12deg' }, { translateX: -7 }] },
   nearCard: { backgroundColor: colors.accent, borderColor: colors.accent, transform: [{ rotate: '9deg' }, { translateX: 5 }] },
   previewCard: { width: '86%', height: 216, borderRadius: 16, backgroundColor: colors.ink, padding: 18, justifyContent: 'center', alignItems: 'center', transform: [{ rotate: '-3deg' }], boxShadow: '0 14px 28px rgba(0, 0, 0, 0.24)' },
   compactCard: { height: 148, padding: 14, borderRadius: 13 },
   cardMark: { color: colors.background, fontSize: 108, lineHeight: 116, fontWeight: '900', fontStyle: 'italic', letterSpacing: -8, paddingRight: 8 },
   compactCardMark: { fontSize: 76, lineHeight: 84, letterSpacing: -5 },
-  cardCaption: { color: '#4C5B52', fontSize: 11, lineHeight: 18, letterSpacing: 3, fontWeight: '800' },
+  cardCaption: { color: colors.line, fontSize: 11, lineHeight: 18, letterSpacing: 3, fontWeight: '800' },
   actions: { gap: 8 },
   changeDeck: { minHeight: 44, paddingHorizontal: 12, paddingVertical: 10, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 8, borderRadius: 8 },
   changeDeckPressed: { backgroundColor: colors.surface },
@@ -110,13 +109,13 @@ const styles = StyleSheet.create({
   separator: { color: colors.line, fontSize: 14, lineHeight: 20 },
   changeDeckText: { color: colors.muted, fontSize: 14, lineHeight: 20, fontWeight: '700', textDecorationLine: 'underline' },
   primary: { minHeight: 72, borderRadius: 14, backgroundColor: colors.accent, paddingVertical: 16, paddingHorizontal: 20, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
-  primaryText: { flexShrink: 1, color: colors.background, fontSize: 20, lineHeight: 26, fontWeight: '900' },
-  primaryArrow: { color: colors.background, fontSize: 29, lineHeight: 32, fontWeight: '700' },
-  primaryPressed: { opacity: 0.85, transform: [{ scale: 0.985 }] },
+  primaryText: { flexShrink: 1, color: colors.onAccent, fontSize: 20, lineHeight: 26, fontWeight: '900' },
+  primaryArrow: { color: colors.onAccent, fontSize: 29, lineHeight: 32, fontWeight: '700' },
+  primaryPressed: { backgroundColor: colors.accentPressed, transform: [{ scale: 0.985 }] },
   disabled: { opacity: 0.45 },
   messageCard: { minHeight: 216, borderWidth: 1, borderColor: colors.line, borderRadius: 16, padding: 24, gap: 10, justifyContent: 'center', backgroundColor: colors.surface },
   compactMessageCard: { minHeight: 162, padding: 16 },
-  messageMark: { color: colors.accent, fontSize: 38, lineHeight: 42 },
+  messageMark: { color: colors.ink, fontSize: 38, lineHeight: 42 },
   messageTitle: { color: colors.ink, fontSize: 22, lineHeight: 28, fontWeight: '800' },
   messageText: { color: colors.muted, fontSize: 15, lineHeight: 21 },
 });

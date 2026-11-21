@@ -41,9 +41,9 @@ const styles = StyleSheet.create({
   compactTitle: { fontSize: 20, lineHeight: 26 },
   closeButton: { minWidth: 64, minHeight: 52, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 12, borderRadius: 10, borderWidth: 1, borderColor: colors.accent },
   compactCloseButton: { minWidth: 56, minHeight: 44, paddingHorizontal: 10, borderRadius: 8 },
-  closeText: { color: colors.accent, fontSize: 16, fontWeight: '800' },
+  closeText: { color: colors.ink, fontSize: 16, fontWeight: '800' },
   scroll: { flexShrink: 1 },
   content: { padding: 16, gap: 12, paddingBottom: 16 },
   body: { flex: 1, minHeight: 0 },
-  pressed: { backgroundColor: '#34402A' },
+  pressed: { backgroundColor: colors.pressedSurface },
 });

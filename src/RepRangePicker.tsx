@@ -32,7 +32,7 @@ export function RepRangePicker({ value, onChange, disabled = false }: {
         {customOpen && (
           <Pressable accessibilityRole="button" accessibilityLabel="Show rep range presets" onPress={() => { setCustomOpen(false); Keyboard.dismiss(); }}
             style={({ pressed }) => [styles.back, pressed && styles.pressed]}>
-            <Text style={[styles.optionText, styles.accent]}>Presets</Text>
+            <Text style={styles.optionText}>Presets</Text>
           </Pressable>
         )}
       </View>
@@ -45,7 +45,7 @@ export function RepRangePicker({ value, onChange, disabled = false }: {
               accessibilityLabel={preset === null ? 'Default exercise reps' : `${repRangeLabel(preset)} reps`}
               accessibilityState={{ selected, disabled }} disabled={disabled} onPress={() => { setCustomOpen(false); onChange(preset); Keyboard.dismiss(); }}
               style={({ pressed }) => [styles.option, selected && styles.selected, disabled && styles.disabled, pressed && styles.pressed]}>
-              <Text style={[styles.optionText, selected && styles.accent]}>{repRangeLabel(preset)}</Text>
+              <Text style={[styles.optionText, selected && styles.selectedText]}>{repRangeLabel(preset)}</Text>
             </Pressable>
           );
         })}
@@ -53,7 +53,7 @@ export function RepRangePicker({ value, onChange, disabled = false }: {
           accessibilityState={{ selected: customSelected, expanded: false }}
           onPress={() => { setMinText(String(value?.min ?? 10)); setMaxText(String(value?.max ?? 20)); setCustomOpen(true); }}
           style={({ pressed }) => [styles.option, customSelected && styles.selected, pressed && styles.pressed]}>
-          <Text style={[styles.optionText, customSelected && styles.accent]}>Custom</Text>
+          <Text style={[styles.optionText, customSelected && styles.selectedText]}>Custom</Text>
         </Pressable>
       </View>
       )}
@@ -74,7 +74,7 @@ export function RepRangePicker({ value, onChange, disabled = false }: {
             </View>
             <Pressable accessibilityRole="button" accessibilityLabel="Apply custom rep range"
               accessibilityState={{ disabled: disabled || !parsed.range || applied }} disabled={disabled || !parsed.range || applied} onPress={applyCustom}
-              style={({ pressed }) => [styles.apply, (disabled || !parsed.range || applied) && styles.disabled, pressed && styles.pressed]}>
+              style={({ pressed }) => [styles.apply, (disabled || !parsed.range || applied) && styles.disabled, pressed && styles.applyPressed]}>
               <Text style={styles.applyText}>{applied ? 'Set' : 'Apply'}</Text>
             </Pressable>
           </View>
@@ -93,19 +93,20 @@ const styles = StyleSheet.create({
   customHeading: { flex: 1, gap: 4 },
   back: { minHeight: 52, paddingHorizontal: 12, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: colors.line, borderRadius: 10 },
   label: { color: colors.muted, fontSize: 15, lineHeight: 21, fontWeight: '700' },
-  current: { color: colors.accent, fontSize: 14, lineHeight: 20, fontWeight: '700', flexShrink: 1 },
+  current: { color: colors.ink, fontSize: 14, lineHeight: 20, fontWeight: '700', flexShrink: 1 },
   options: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   option: { flexBasis: '30%', flexGrow: 1, minHeight: 52, padding: 8, borderRadius: 10, borderWidth: 2, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' },
   optionText: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: '700', textAlign: 'center' },
-  selected: { borderColor: colors.accent, backgroundColor: '#283322' },
-  accent: { color: colors.accent },
-  pressed: { backgroundColor: '#34402A' },
+  selected: { borderColor: colors.accent, backgroundColor: colors.accent },
+  selectedText: { color: colors.onAccent },
+  pressed: { backgroundColor: colors.pressedSurface },
   inputs: { flexDirection: 'row', gap: 8, alignItems: 'flex-end' },
   field: { flex: 1, minWidth: 0, gap: 4 },
   fieldLabel: { color: colors.muted, fontSize: 14, lineHeight: 20, fontWeight: '700' },
   input: { minHeight: 52, minWidth: 0, color: colors.ink, backgroundColor: colors.background, borderWidth: 1, borderColor: colors.line, borderRadius: 10, paddingHorizontal: 10, paddingVertical: 10, fontSize: 22, fontWeight: '700', textAlign: 'center' },
   apply: { minHeight: 52, minWidth: 72, borderRadius: 10, backgroundColor: colors.accent, alignItems: 'center', justifyContent: 'center', padding: 10 },
-  applyText: { color: colors.background, fontSize: 16, lineHeight: 22, fontWeight: '800' },
+  applyPressed: { backgroundColor: colors.accentPressed },
+  applyText: { color: colors.onAccent, fontSize: 16, lineHeight: 22, fontWeight: '800' },
   disabled: { opacity: 0.45 },
   note: { color: colors.muted, fontSize: 14, lineHeight: 20 },
   error: { color: '#FFD5B5', fontSize: 14, lineHeight: 20 },

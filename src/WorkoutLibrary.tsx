@@ -63,7 +63,7 @@ export function WorkoutLibrary({ currentId, repRange, disabled, favorites, exclu
               accessibilityHint={filter === option.value ? resultLabel : undefined}
               onPress={() => { setFilter(option.value); setEquipmentOpen(false); list.current?.scrollToOffset({ offset: 0, animated: false }); }}
               style={({ pressed }) => [styles.filter, filter === option.value && styles.selected, pressed && styles.pressed]}>
-              <Text style={[styles.filterText, filter === option.value && styles.accent]}>{option.label}</Text>
+              <Text style={[styles.filterText, filter === option.value && styles.selectedText]}>{option.label}</Text>
               {filter === option.value && <Text style={styles.resultCount} accessibilityLabel={resultLabel} accessibilityLiveRegion="polite" testID="library-results">
                 {listLoading ? '…' : listError ? '!' : matches.length}
               </Text>}
@@ -87,7 +87,7 @@ export function WorkoutLibrary({ currentId, repRange, disabled, favorites, exclu
               accessibilityState={{ expanded: equipmentOpen }}
               onPress={() => { Keyboard.dismiss(); setEquipmentOpen(!equipmentOpen); }}
               style={({ pressed }) => [styles.equipmentButton, equipment !== 'all' && styles.selected, pressed && styles.pressed]}>
-              <Text style={[styles.equipmentText, equipment !== 'all' && styles.accent]} numberOfLines={1}>{equipmentLabel}</Text>
+              <Text style={[styles.equipmentText, equipment !== 'all' && styles.selectedText]} numberOfLines={1}>{equipmentLabel}</Text>
               <View style={[styles.chevron, equipmentOpen && styles.chevronOpen]} accessible={false} />
             </Pressable>
             {equipmentOpen && <View style={styles.equipmentMenu}>
@@ -96,7 +96,7 @@ export function WorkoutLibrary({ currentId, repRange, disabled, favorites, exclu
                   accessibilityState={{ selected: equipment === option.value }}
                   onPress={() => { setEquipment(option.value); setEquipmentOpen(false); list.current?.scrollToOffset({ offset: 0, animated: false }); }}
                   style={({ pressed }) => [styles.equipmentOption, equipment === option.value && styles.selected, pressed && styles.pressed]}>
-                  <Text style={[styles.equipmentOptionText, equipment === option.value && styles.accent]}>{option.label}</Text>
+                  <Text style={[styles.equipmentOptionText, equipment === option.value && styles.selectedText]}>{option.label}</Text>
                 </Pressable>
               ))}
             </View>}
@@ -130,14 +130,14 @@ export function WorkoutLibrary({ currentId, repRange, disabled, favorites, exclu
                 accessibilityState={{ selected: saved, disabled: favoriteDisabled, busy: favorites.phase === 'saving' }}
                 disabled={favoriteDisabled} onPress={() => onFavorite(item.id)}
                 style={({ pressed }) => [styles.starButton, saved && styles.selected, pressed && styles.pressed, favoriteDisabled && styles.disabled]}>
-                <Text accessible={false} style={[styles.star, saved && styles.accent]}>{saved ? '★' : '☆'}</Text>
+                <Text accessible={false} style={[styles.star, saved && styles.selectedText]}>{saved ? '★' : '☆'}</Text>
               </Pressable>
               <Pressable accessibilityRole="button" accessibilityLabel={`${excluded ? 'Restore' : 'Exclude'} ${item.name}`}
                 accessibilityHint={excluded ? 'Returns this move to your draws.' : 'Removes this move from all draws, including Favorites.'}
                 accessibilityState={{ selected: excluded, disabled: excludeDisabled, busy: exclusions.phase === 'saving' }}
                 disabled={excludeDisabled} onPress={() => onExclude(item.id)}
                 style={({ pressed }) => [styles.excludeButton, excluded && styles.restoreButton, pressed && styles.pressed, excludeDisabled && styles.disabled]}>
-                <Text style={[styles.excludeText, excluded && styles.accent]}>{excluded ? 'Restore' : 'Exclude'}</Text>
+                <Text style={[styles.excludeText, excluded && styles.selectedText]}>{excluded ? 'Restore' : 'Exclude'}</Text>
               </Pressable>
             </View>
           );
@@ -153,17 +153,17 @@ const styles = StyleSheet.create({
   searchBox: { flex: 1, minWidth: 0, flexDirection: 'row', borderWidth: 1, borderColor: colors.line, borderRadius: 8, backgroundColor: colors.background },
   search: { flex: 1, minWidth: 0, minHeight: 44, paddingHorizontal: 10, paddingVertical: 10, color: colors.ink, fontSize: 16, lineHeight: 22 },
   clearButton: { minWidth: 44, minHeight: 44, alignItems: 'center', justifyContent: 'center', borderRadius: 7 },
-  clearText: { color: colors.accent, fontSize: 14, fontWeight: '700' },
+  clearText: { color: colors.ink, fontSize: 14, fontWeight: '700' },
   filters: { flexDirection: 'row', gap: 4 },
   filter: { flex: 1, minHeight: 44, flexDirection: 'row', gap: 4, borderWidth: 1, borderColor: colors.line, borderRadius: 8, paddingHorizontal: 4, paddingVertical: 6, alignItems: 'center', justifyContent: 'center' },
   filterText: { color: colors.ink, fontSize: 14, lineHeight: 20, fontWeight: '700', textAlign: 'center' },
-  selected: { borderColor: colors.accent, backgroundColor: '#283322' },
-  accent: { color: colors.accent },
-  resultCount: { color: colors.accent, fontSize: 12, lineHeight: 18, fontWeight: '700' },
+  selected: { borderColor: colors.accent, backgroundColor: colors.accent },
+  selectedText: { color: colors.onAccent },
+  resultCount: { color: colors.onAccent, fontSize: 12, lineHeight: 18, fontWeight: '700' },
   equipmentControl: { width: 116 },
   equipmentButton: { minHeight: 46, flexDirection: 'row', gap: 6, alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, borderColor: colors.line, borderRadius: 8, paddingHorizontal: 8, paddingVertical: 8 },
   equipmentText: { flexShrink: 1, color: colors.ink, fontSize: 14, lineHeight: 20, fontWeight: '700' },
-  chevron: { width: 7, height: 7, borderRightWidth: 2, borderBottomWidth: 2, borderColor: colors.accent, transform: [{ rotate: '45deg' }], marginTop: -3, marginRight: 2 },
+  chevron: { width: 7, height: 7, borderRightWidth: 2, borderBottomWidth: 2, borderColor: colors.ink, transform: [{ rotate: '45deg' }], marginTop: -3, marginRight: 2 },
   chevronOpen: { transform: [{ rotate: '225deg' }], marginTop: 3 },
   equipmentMenu: { position: 'absolute', top: 50, right: 0, width: 172, padding: 4, gap: 4, borderRadius: 10, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.surface, elevation: 8, boxShadow: '0 6px 18px rgba(0,0,0,0.4)' },
   equipmentOption: { minHeight: 44, justifyContent: 'center', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 6, borderWidth: 1, borderColor: 'transparent' },
@@ -172,19 +172,19 @@ const styles = StyleSheet.create({
   list: { flex: 1, minHeight: 0 },
   listContent: { paddingBottom: 16 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, borderBottomWidth: 1, borderBottomColor: colors.line },
-  current: { backgroundColor: '#283322' },
+  current: { backgroundColor: colors.accentSurface },
   choose: { flex: 1, minHeight: 92, minWidth: 0, justifyContent: 'center', gap: 3, paddingVertical: 12, paddingRight: 4, borderRadius: 8 },
   name: { color: colors.ink, fontSize: 17, lineHeight: 22, fontWeight: '800' },
   plainName: { color: colors.muted, fontSize: 14, lineHeight: 20 },
-  dose: { color: colors.accent, fontSize: 13, lineHeight: 18, fontWeight: '700' },
+  dose: { color: colors.ink, fontSize: 13, lineHeight: 18, fontWeight: '700' },
   starButton: { width: 52, height: 52, borderWidth: 1, borderColor: colors.line, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   star: { color: colors.ink, fontSize: 28, lineHeight: 34 },
   excludeButton: { minWidth: 66, minHeight: 52, paddingHorizontal: 6, borderWidth: 1, borderColor: colors.line, borderRadius: 10, alignItems: 'center', justifyContent: 'center' },
   excludeText: { color: colors.muted, fontSize: 13, lineHeight: 18, fontWeight: '700' },
-  restoreButton: { borderColor: colors.accent },
+  restoreButton: { borderColor: colors.accent, backgroundColor: colors.accentSurface },
   excludedName: { color: colors.muted },
   excludedText: { color: '#FFD5B5' },
   empty: { padding: 24, color: colors.muted, fontSize: 16, lineHeight: 24, textAlign: 'center' },
-  pressed: { backgroundColor: '#34402A' },
+  pressed: { backgroundColor: colors.pressedSurface },
   disabled: { opacity: 0.45 },
 });

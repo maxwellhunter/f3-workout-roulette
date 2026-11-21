@@ -75,7 +75,7 @@ function Workout({ exercise, saved, favoriteDisabled, saving, onlyMove, drawDisa
             <Pressable accessibilityRole="button" accessibilityLabel={saved ? 'Remove from favorites' : 'Save to favorites'}
               accessibilityState={{ selected: saved, disabled: favoriteDisabled, busy: saving }} disabled={favoriteDisabled} onPress={onFavorite}
               style={({ pressed }) => [styles.favoriteButton, saved && styles.favoriteSelected, pressed && styles.pressed, favoriteDisabled && styles.disabled]}>
-              <Text accessible={false} style={[styles.star, saved && styles.accentText]}>{saved ? '★' : '☆'}</Text>
+              <Text accessible={false} style={[styles.star, saved && styles.selectedText]}>{saved ? '★' : '☆'}</Text>
             </Pressable>
           </View>
           <View style={styles.moveContent}>
@@ -231,7 +231,7 @@ export default function App() {
                   accessibilityState={{ selected: equipment === option.value, disabled: selectionDisabled }} disabled={selectionDisabled}
                   onPress={() => changeSelection(option.value, favoritesOnly)}
                   style={({ pressed }) => [styles.equipmentOption, equipment === option.value && styles.optionSelected, pressed && styles.pressed, selectionDisabled && styles.disabled]}>
-                  <Text style={[styles.optionText, equipment === option.value && styles.accentText]}>{option.label}</Text>
+                  <Text style={[styles.optionText, equipment === option.value && styles.selectedText]}>{option.label}</Text>
                 </Pressable>
               ))}
             </View>
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
   screen: { flex: 1, minHeight: 0, width: '100%', maxWidth: 500, alignSelf: 'center', paddingHorizontal: 12, paddingVertical: 8, gap: 8 },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8, minHeight: 52 },
   brand: { flexDirection: 'row', alignItems: 'center', gap: 8, flexShrink: 0 },
-  logo: { color: colors.background, backgroundColor: colors.accent, fontSize: 24, lineHeight: 31, paddingHorizontal: 5, fontWeight: '900', fontStyle: 'italic', letterSpacing: -1.5 },
+  logo: { color: colors.background, backgroundColor: colors.ink, fontSize: 24, lineHeight: 31, paddingHorizontal: 5, fontWeight: '900', fontStyle: 'italic', letterSpacing: -1.5 },
   brandName: { color: colors.ink, fontSize: 12, lineHeight: 18, fontWeight: '900', letterSpacing: 0.8, flexShrink: 1 },
   browseDeckButton: { minHeight: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 10, borderWidth: 1, borderColor: colors.line },
   deckButton: { minHeight: 52, flexShrink: 1, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.line, borderRadius: 10, paddingHorizontal: 12, paddingVertical: 8, maxWidth: '62%' },
@@ -284,9 +284,9 @@ const styles = StyleSheet.create({
   cardTools: { flexDirection: 'row', gap: 8, alignItems: 'center' },
   equipmentBadge: { flex: 1, color: colors.muted, fontSize: 11, lineHeight: 16, fontWeight: '800', letterSpacing: 0.8 },
   howToButton: { minHeight: 52, paddingHorizontal: 12, alignItems: 'center', justifyContent: 'center', borderRadius: 10 },
-  howToText: { color: colors.accent, fontSize: 16, lineHeight: 22, fontWeight: '800' },
+  howToText: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: '800' },
   favoriteButton: { width: 52, height: 52, borderRadius: 10, alignItems: 'center', justifyContent: 'center', borderWidth: 1, borderColor: colors.line },
-  favoriteSelected: { borderColor: colors.accent },
+  favoriteSelected: { borderColor: colors.accent, backgroundColor: colors.accent },
   star: { color: colors.ink, fontSize: 30, lineHeight: 36 },
   moveContent: { flexGrow: 1, justifyContent: 'center', gap: 16, paddingTop: 12, paddingBottom: 8 },
   moveHeading: { gap: 4 },
@@ -294,35 +294,35 @@ const styles = StyleSheet.create({
   exerciseName: { color: colors.ink, fontSize: 38, lineHeight: 42, fontWeight: '900', letterSpacing: -0.7 },
   compactName: { fontSize: 30, lineHeight: 33, letterSpacing: -0.5 },
   dose: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 20 },
-  amount: { color: colors.accent, fontSize: 120, lineHeight: 124, fontWeight: '900', letterSpacing: -5, fontVariant: ['tabular-nums'] },
+  amount: { color: colors.ink, fontSize: 120, lineHeight: 124, fontWeight: '900', letterSpacing: -5, fontVariant: ['tabular-nums'] },
   compactAmount: { fontSize: 92, lineHeight: 96, letterSpacing: -3 },
-  distance: { color: colors.accent, fontSize: 40, lineHeight: 44, fontWeight: '900', letterSpacing: -0.7 },
+  distance: { color: colors.ink, fontSize: 40, lineHeight: 44, fontWeight: '900', letterSpacing: -0.7 },
   compactDistance: { fontSize: 32, lineHeight: 36, letterSpacing: -0.5 },
   doseLabel: { gap: 6, flexShrink: 1 },
-  unit: { color: colors.accent, fontSize: 16, lineHeight: 22, fontWeight: '800', letterSpacing: 0.6 },
+  unit: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: '800', letterSpacing: 0.6 },
   description: { color: colors.muted, fontSize: 17, lineHeight: 24 },
   actions: { flexDirection: 'row', gap: 8 },
   action: { flex: 1, minHeight: 64, borderRadius: 12, paddingHorizontal: 8, paddingVertical: 16, alignItems: 'center', justifyContent: 'center', borderWidth: 2 },
   primaryAction: { backgroundColor: colors.accent, borderColor: colors.accent },
-  actionText: { color: colors.background, fontSize: 20, lineHeight: 26, fontWeight: '900', textAlign: 'center' },
-  actionPressed: { opacity: 0.8 },
-  pressed: { backgroundColor: '#34402A' },
+  actionText: { color: colors.onAccent, fontSize: 20, lineHeight: 26, fontWeight: '900', textAlign: 'center' },
+  actionPressed: { backgroundColor: colors.accentPressed, borderColor: colors.accentPressed },
+  pressed: { backgroundColor: colors.pressedSurface },
   disabled: { opacity: 0.45 },
-  accentText: { color: colors.accent },
+  selectedText: { color: colors.onAccent },
   equipmentOptions: { flexDirection: 'row', gap: 6 },
   equipmentOption: { flex: 1, minHeight: 56, paddingHorizontal: 4, paddingVertical: 12, borderRadius: 10, borderWidth: 2, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' },
   optionText: { color: colors.ink, fontSize: 14, lineHeight: 20, fontWeight: '700', textAlign: 'center' },
-  optionSelected: { borderColor: colors.accent, backgroundColor: '#283322' },
+  optionSelected: { borderColor: colors.accent, backgroundColor: colors.accent },
   deckOptions: { flexDirection: 'row', gap: 8 },
   deckOption: { flex: 1, minHeight: 56, borderWidth: 2, borderColor: colors.line, borderRadius: 10, padding: 10, flexDirection: 'row', justifyContent: 'space-between', gap: 6, alignItems: 'center' },
   deckOptionText: { color: colors.ink, fontSize: 15, lineHeight: 21, fontWeight: '700', flexShrink: 1 },
-  optionCount: { color: colors.accent, fontSize: 16, lineHeight: 22, fontWeight: '800' },
+  optionCount: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: '800' },
   sheetNote: { color: colors.muted, fontSize: 16, lineHeight: 24 },
   instructions: { gap: 20 },
   sheetExercise: { color: colors.ink, fontSize: 26, lineHeight: 32, fontWeight: '800' },
   sheetMeta: { color: colors.muted, fontSize: 16, lineHeight: 23 },
   step: { flexDirection: 'row', gap: 12 },
-  stepNumber: { color: colors.accent, fontSize: 18, lineHeight: 27, fontWeight: '800' },
+  stepNumber: { color: colors.ink, fontSize: 18, lineHeight: 27, fontWeight: '800' },
   instructionText: { flexShrink: 1, color: colors.ink, fontSize: 18, lineHeight: 27 },
-  counting: { color: colors.accent, fontSize: 17, lineHeight: 25, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 16 },
+  counting: { color: colors.ink, fontSize: 17, lineHeight: 25, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 16 },
 });
