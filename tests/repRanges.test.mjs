@@ -63,7 +63,8 @@ test('counting instructions follow changed reps and explain uneven alternating t
     assert.ok(!countingText(exercise).includes('{'), exercise.id);
     if (exercise.unit === 'distance') continue;
     const numbers = countingText({ ...exercise, amount: 40 }).match(/\d+/g)?.map(Number) ?? [];
-    assert.ok(numbers.every((number) => [1, 20, 40, 80].includes(number)), `Stale dose in ${exercise.id}`);
+    const allowed = exercise.unit === 'cadence' ? [1, 2, 3, 40] : [1, 20, 40, 80];
+    assert.ok(numbers.every((number) => allowed.includes(number)), `Stale dose in ${exercise.id}`);
   }
 });
 
@@ -82,7 +83,7 @@ test('all block cards apply count ranges in fives, including Rifle Carry steps',
 
 test('converted movements explain alternating reps, spoken counts, and open distance', () => {
   for (const [id, expected] of [
-    ['flutter-kicks', 'Each leg kick is 1 rep; 35 total (18 on the first side, 17 on the other).'],
+    ['flutter-kicks', 'Use four-count cadence: “1, 2, 3, ONE,” then “1, 2, 3, TWO.” Each beat is one alternating kick; each full cycle is 1 rep. Complete 35 reps in cadence.'],
     ['mountain-climbers', 'Each knee drive is 1 rep; 35 total (18 on the first side, 17 on the other).'],
     ['al-gore', 'Hold while counting aloud to 35 at a steady pace. Keep breathing.'],
     ['forearm-plank', 'Hold while counting aloud to 35 at a steady pace; lower your knees if needed.'],

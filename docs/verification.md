@@ -180,3 +180,9 @@ The no-scroll result applies to the main workout view at the tested sizes and de
 - Bear Crawl displayed “Pick your distance” both in the compact Browse row and on its card. Changing its range to a fixed 100 left no numeric target. The card fit without scrolling at 320 × 568 (418px workout area) and 390 × 844 (694px workout area).
 - Verified desktop rendering at 1280 × 720. Reset viewport overrides and reloaded the local preview after testing; no favorites or exclusions were changed.
 - Screenshots: `phone-flutter-reps.jpg`, `phone-bear-distance.jpg`, and `phone-spoken-hold.jpg`, all at 320 × 568. Earlier timer verification and screenshots above describe historical releases; the current deck has no timers.
+
+## Flutter Kicks in cadence — November 21, 2026
+
+- Corrected Flutter Kicks to four-count cadence for the user's AO. The workout card, Browse, and screen-reader label show “in cadence.” How to explains one kick per beat and one displayed rep per complete “1, 2, 3, ONE” cycle. Rep ranges continue to select complete cycles in multiples of five.
+- At 320 × 568, Browse previewed “20 in cadence”; the card showed 20 IN CADENCE and the instructions matched. Applying a fixed 100 range updated both the card and instructions. Both counts fit the 418px workout area without scrolling.
+- All 47 tests, TypeScript, ESLint, and the production web export pass. No native API or component change was needed. Screenshot: `phone-flutter-cadence.jpg`. The prior single-kick Flutter Kicks verification describes the superseded release.

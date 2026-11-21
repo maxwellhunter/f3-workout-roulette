@@ -68,6 +68,7 @@ export function countingText(exercise: Exercise): string {
 export function doseUnitLabel(unit: Exercise['unit']): string {
   return {
     reps: 'reps',
+    cadence: 'in cadence',
     'per side': 'reps / side',
     count: 'count hold',
     'count per side': 'count / side',

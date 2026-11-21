@@ -20,14 +20,14 @@ test('deck has 36 unique, fully described exercises with counts in fives or open
       assert.ok(Number.isInteger(exercise.amount) && exercise.amount > 0);
       assert.equal(exercise.amount % 5, 0, `${exercise.id} must count in fives`);
     }
-    assert.ok(['reps', 'per side', 'count', 'count per side', 'steps', 'distance'].includes(exercise.unit));
+    assert.ok(['reps', 'cadence', 'per side', 'count', 'count per side', 'steps', 'distance'].includes(exercise.unit));
     assert.doesNotMatch([exercise.description, ...exercise.steps, exercise.counting].join(' '), /timer|seconds|displayed time/i);
   }
 });
 
 test('former timed moves use repetitions, spoken holds, steps, or a chosen crawl distance', () => {
   const expected = {
-    'flutter-kicks': 'reps', 'mountain-climbers': 'reps',
+    'flutter-kicks': 'cadence', 'mountain-climbers': 'reps',
     'al-gore': 'count', 'forearm-plank': 'count', 'side-plank': 'count per side',
     'crab-walk': 'steps', 'rifle-carry': 'steps', 'bear-crawl': 'distance',
   };

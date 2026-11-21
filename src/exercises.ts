@@ -13,12 +13,12 @@ export type Exercise = {
   steps: readonly string[];
   counting: string;
 } & (
-  | { amount: number; unit: 'reps' | 'per side' | 'count' | 'count per side' | 'steps' }
+  | { amount: number; unit: 'reps' | 'cadence' | 'per side' | 'count' | 'count per side' | 'steps' }
   | { amount: null; unit: 'distance' }
 );
 
 // Curated F3 Classics only; warm-ups and general-fitness extras are retired.
-// Doses and single-count conventions remain app defaults, not F3 cadence.
+// Doses are app defaults; each card explains its single-count or cadence convention.
 // Reference sources and adapted movement variations are documented in SOURCES.md.
 export const exercises: readonly Exercise[] = [
   {
@@ -201,14 +201,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Alternating leg kicks",
     "category": "Core",
     "amount": 20,
-    "unit": "reps",
+    "unit": "cadence",
     "description": "Make small alternating leg kicks while lying on your back.",
     "steps": [
       "Lie on your back and lift both legs, with a slight knee bend if needed.",
-      "Raise one leg a little as the other lowers, then alternate.",
+      "Raise one leg a little as the other lowers, alternating kicks on each cadence beat.",
       "Keep your lower back down; lift your legs higher if your back starts to arch."
     ],
-    "counting": "Each leg kick is 1 rep; {amount} total ({split}).",
+    "counting": "Use four-count cadence: “1, 2, 3, ONE,” then “1, 2, 3, TWO.” Each beat is one alternating kick; each full cycle is 1 rep. Complete {amount} reps in cadence.",
     "equipment": "bodyweight"
   },
   {

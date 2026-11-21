@@ -1,8 +1,10 @@
 # Exercise sources and adaptations
 
-Reviewed November 20, 2026. This is an independent F3-inspired prototype, not an official F3 product. Instructions are written for this app; no official logo artwork is used.
+Reviewed November 21, 2026. This is an independent F3-inspired prototype, not an official F3 product. Instructions are written for this app; no official logo artwork is used.
 
 ## F3 terminology
+
+- [F3 Nation Q101 — Counting Cadence](https://f3nation.com/q101/): the leader calls the first three beats and the PAX calls the repetition number on the fourth. Flutter Kicks use this four-count convention at the user’s request.
 
 - [F3 Nation Exicon](https://codex.f3nation.com/exicon): original Al Gore, American Hammer, and shoulder-tap terminology (checked November 17).
 - [F3 Marietta Lexicon & Exicon](https://www.f3marietta.com/glossary): Merkin = push-up, Side Straddle Hop = jumping jack, LBC = Little Baby Crunch. Its coupon entries describe cinder-block curls, rows, overhead presses, squats, lunges and deadlifts. The Flora entry also describes a loaded goblet-squat hold. “Block” in this app means one cinder block, also called a coupon in F3.
@@ -49,7 +51,7 @@ Doses are modest app defaults, not source-prescribed training plans: block moves
 
 American Hammers use the documented heels-down modification. Push-up instructions allow knees down as a modification; the active catalog no longer has separate modification-only cards. Each card spells out its variation and counting convention.
 
-Counts are single-count, not F3 group cadence. Alternating movements state total reps and the per-side breakdown. At the user’s AO, Flutter Kicks are counted rather than timed, so all former timed cards now use counts or open distance. Each Flutter Kick and Mountain Climber knee drive is one rep. Al Gore and Chilcutts use a spoken count hold; Side Plank uses a spoken count on each side. A spoken count is called at the group’s pace, not measured in seconds. Crab Walk counts each foot step; Rifle Carry counts individual footsteps. Bear Crawl says “Pick your distance” and lets the user choose a finish point. Murder Bunnies count each block-move-and-hop cycle as one rep. These counting conventions are app choices, not changes to the underlying F3 movements.
+Flutter Kicks use four-count F3 cadence at the user’s AO: each full cycle is one displayed rep. Other repeated movements use the single-count convention explained on their cards; alternating single-count movements state total reps and the per-side breakdown. At the user’s AO, Flutter Kicks are counted rather than timed, so all former timed cards now use counts or open distance. Flutter Kicks alternate on each cadence beat, with the group calling the rep number on beat four; the chosen range counts complete cycles. Each Mountain Climber knee drive is one rep. Al Gore and Chilcutts use a spoken count hold; Side Plank uses a spoken count on each side. A spoken count is called at the group’s pace, not measured in seconds. Crab Walk counts each foot step; Rifle Carry counts individual footsteps. Bear Crawl says “Pick your distance” and lets the user choose a finish point. Murder Bunnies count each block-move-and-hop cycle as one rep. These counting conventions are app choices, not changes to the underlying F3 movements.
 
 Users can override counted exercises with an inclusive rep range from 5 to 100 in Choose your deck. Both endpoints and all drawn counts must be multiples of five. These are user-selected counts, not source-prescribed training plans. Per-side counts apply on each side; alternating totals split across sides, with one extra on the starting side for an odd total. Default restores the bundled dose. The range also applies to spoken hold counts and steps; Bear Crawl remains open distance with no numeric target.
 

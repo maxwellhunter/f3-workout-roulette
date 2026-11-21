@@ -70,7 +70,7 @@ test('dose previews apply the range to reps, holds, and steps with the correct u
   assert.deepEqual(libraryDose(merkins, { min: 50, max: 50 }), { count: '50', unit: 'reps' });
   assert.deepEqual(libraryDose(lunges, { min: 20, max: 30 }), { count: '20–30', unit: 'reps / side' });
   assert.deepEqual(libraryDose(sidePlank, { min: 50, max: 100 }), { count: '50–100', unit: 'count / side' });
-  for (const [id, unit] of [['flutter-kicks', 'reps'], ['mountain-climbers', 'reps'], ['al-gore', 'count hold'], ['forearm-plank', 'count hold'], ['crab-walk', 'steps'], ['rifle-carry', 'steps']]) {
+  for (const [id, unit] of [['flutter-kicks', 'in cadence'], ['mountain-climbers', 'reps'], ['al-gore', 'count hold'], ['forearm-plank', 'count hold'], ['crab-walk', 'steps'], ['rifle-carry', 'steps']]) {
     const exercise = exercises.find((item) => item.id === id);
     assert.deepEqual(libraryDose(exercise, { min: 50, max: 100 }), { count: '50–100', unit });
     assert.deepEqual(libraryDose(exercise, null), { count: String(exercise.amount), unit });
