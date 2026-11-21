@@ -44,9 +44,9 @@ export function repRangeLabel(range: RepRange | null): string {
   return range === null ? 'Default' : range.min === range.max ? String(range.min) : `${range.min}–${range.max}`;
 }
 
-/** Roll only when drawing a card or applying a range; timed cards retain their duration. */
-export function repAmount(exercise: Exercise, range: RepRange | null, random: () => number = Math.random): number {
-  if (range === null || exercise.unit === 'seconds') return exercise.amount;
+/** Roll only when drawing a card or applying a range; open-distance cards have no count. */
+export function repAmount(exercise: Exercise, range: RepRange | null, random: () => number = Math.random): number | null {
+  if (range === null || exercise.unit === 'distance') return exercise.amount;
   if (!isValidRange(range)) throw new RangeError(`Rep range must be ordered multiples of ${REP_STEP} from ${MIN_REPS} to ${MAX_REPS}.`);
   const value = random();
   if (!Number.isFinite(value) || value < 0 || value >= 1) throw new RangeError('Random value must be in [0, 1).');
@@ -56,9 +56,22 @@ export function repAmount(exercise: Exercise, range: RepRange | null, random: ()
 
 /** Keep instructions aligned with the displayed count, including odd alternating totals. */
 export function countingText(exercise: Exercise): string {
+  if (exercise.unit === 'distance') return exercise.counting;
   const split = exercise.amount % 2 === 0
     ? `${exercise.amount / 2} per side`
     : `${Math.ceil(exercise.amount / 2)} on the first side, ${Math.floor(exercise.amount / 2)} on the other`;
   return exercise.counting.replaceAll('{amount}', String(exercise.amount))
     .replaceAll('{total}', String(exercise.amount * 2)).replaceAll('{split}', split);
+}
+
+/** Shared by the workout, Browse, and screen-reader announcements. */
+export function doseUnitLabel(unit: Exercise['unit']): string {
+  return {
+    reps: 'reps',
+    'per side': 'reps / side',
+    count: 'count hold',
+    'count per side': 'count / side',
+    steps: 'steps',
+    distance: '',
+  }[unit];
 }

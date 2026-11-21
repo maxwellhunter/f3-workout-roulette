@@ -31,12 +31,12 @@ test('rep ranges draw every multiple of five uniformly, including both endpoints
   }
 });
 
-test('default restores each original dose and ranges never alter timers or the catalog', () => {
+test('ranges apply to every count while Bear Crawl stays open distance and the catalog stays unchanged', () => {
   const before = JSON.stringify(exercises);
   for (const exercise of exercises) {
     assert.equal(repAmount(exercise, null, () => { throw new Error('Default must not roll'); }), exercise.amount);
-    if (exercise.unit === 'seconds') {
-      assert.equal(repAmount(exercise, { min: 50, max: 100 }, () => { throw new Error('Timers must not roll'); }), exercise.amount);
+    if (exercise.unit === 'distance') {
+      assert.equal(repAmount(exercise, { min: 50, max: 100 }, () => { throw new Error('Distance must not roll'); }), null);
     } else {
       assert.equal(repAmount(exercise, { min: 50, max: 100 }, () => 0), 50);
     }
@@ -61,23 +61,36 @@ test('counting instructions follow changed reps and explain uneven alternating t
   assert.equal(countingText({ ...hammers, amount: 35 }), 'Each side touch is 1 rep; 35 total (18 on the first side, 17 on the other).');
   for (const exercise of exercises) {
     assert.ok(!countingText(exercise).includes('{'), exercise.id);
-    if (exercise.unit === 'seconds') continue;
+    if (exercise.unit === 'distance') continue;
     const numbers = countingText({ ...exercise, amount: 40 }).match(/\d+/g)?.map(Number) ?? [];
     assert.ok(numbers.every((number) => [1, 20, 40, 80].includes(number)), `Stale dose in ${exercise.id}`);
   }
 });
 
-test('new block cards apply rep ranges in fives while Rifle Carry retains its timer', () => {
+test('all block cards apply count ranges in fives, including Rifle Carry steps', () => {
   const range = { min: 20, max: 30 };
-  for (const id of ['block-swings', 'man-makers', 'block-chest-press', 'skull-crushers', 'block-reverse-lunges', 'murder-bunnies', 'block-merkins']) {
-    const exercise = exercises.find((item) => item.id === id);
-    assert.equal(exercise.equipment, 'block');
+  for (const exercise of exercises.filter(({ equipment }) => equipment === 'block')) {
     assert.deepEqual([0, 0.5, 0.99].map((random) => repAmount(exercise, range, () => random)), [20, 25, 30]);
     assert.ok(!countingText({ ...exercise, amount: 25 }).includes('{'));
   }
   const carry = exercises.find(({ id }) => id === 'rifle-carry');
-  assert.equal(carry.unit, 'seconds');
-  assert.equal(repAmount(carry, range), 20);
+  assert.equal(carry.unit, 'steps');
+  assert.equal(countingText({ ...carry, amount: 25 }), 'Each footstep is 1 count; walk 25 short, controlled steps total.');
   const lunges = exercises.find(({ id }) => id === 'block-reverse-lunges');
   assert.equal(countingText({ ...lunges, amount: 25 }), 'Each backward lunge and return is 1 rep; 25 total (13 on the first side, 12 on the other).');
+});
+
+test('converted movements explain alternating reps, spoken counts, and open distance', () => {
+  for (const [id, expected] of [
+    ['flutter-kicks', 'Each leg kick is 1 rep; 35 total (18 on the first side, 17 on the other).'],
+    ['mountain-climbers', 'Each knee drive is 1 rep; 35 total (18 on the first side, 17 on the other).'],
+    ['al-gore', 'Hold while counting aloud to 35 at a steady pace. Keep breathing.'],
+    ['forearm-plank', 'Hold while counting aloud to 35 at a steady pace; lower your knees if needed.'],
+    ['side-plank', 'Count aloud to 35 at a steady pace on each side. Lower and switch sides between holds.'],
+    ['crab-walk', 'Each foot step is 1 count; 35 total (18 on the first side, 17 on the other). Stop if your wrists or shoulders hurt.'],
+  ]) {
+    assert.equal(countingText({ ...exercises.find((exercise) => exercise.id === id), amount: 35 }), expected);
+  }
+  const bear = exercises.find(({ id }) => id === 'bear-crawl');
+  assert.equal(countingText(bear), 'Pick your distance. Choose a finish point, then crawl to it with controlled steps.');
 });

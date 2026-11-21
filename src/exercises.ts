@@ -9,12 +9,13 @@ export type Exercise = {
   plainName: string;
   aliases?: readonly string[];
   category: 'Upper body' | 'Legs' | 'Core' | 'Cardio' | 'Full body';
-  amount: number;
-  unit: 'reps' | 'seconds' | 'per side';
   description: string;
   steps: readonly string[];
   counting: string;
-};
+} & (
+  | { amount: number; unit: 'reps' | 'per side' | 'count' | 'count per side' | 'steps' }
+  | { amount: null; unit: 'distance' }
+);
 
 // Curated F3 Classics only; warm-ups and general-fitness extras are retired.
 // Doses and single-count conventions remain app defaults, not F3 cadence.
@@ -77,14 +78,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Squat hold",
     "category": "Legs",
     "amount": 30,
-    "unit": "seconds",
+    "unit": "count",
     "description": "Hold a squat with your arms reaching forward.",
     "steps": [
       "Stand about shoulder-width apart and send your hips back.",
       "Bend your knees to a comfortable squat depth, heels grounded.",
       "Reach forward as if hugging a tree and hold without bouncing."
     ],
-    "counting": "Hold for the displayed time. Keep breathing.",
+    "counting": "Hold while counting aloud to {amount} at a steady pace. Keep breathing.",
     "equipment": "bodyweight"
   },
   {
@@ -163,14 +164,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Forearm plank hold",
     "category": "Core",
     "amount": 30,
-    "unit": "seconds",
+    "unit": "count",
     "description": "Hold a straight line on your forearms and toes.",
     "steps": [
       "Place elbows below shoulders and extend your legs.",
       "Brace your abdomen and keep hips in line with your shoulders.",
       "Look down and breathe normally while holding still."
     ],
-    "counting": "Hold for the displayed time; lower your knees if needed.",
+    "counting": "Hold while counting aloud to {amount} at a steady pace; lower your knees if needed.",
     "equipment": "bodyweight",
     "aliases": [
       "Chilcutt",
@@ -184,14 +185,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Side core hold",
     "category": "Core",
     "amount": 20,
-    "unit": "seconds",
+    "unit": "count per side",
     "description": "Lift your hips in a side support, then repeat on the other side.",
     "steps": [
       "Lie on one side with elbow below shoulder and feet stacked or staggered.",
       "Lift your hips to align head, hips, and feet; use your bottom knee for support if needed.",
-      "Hold, lower, switch sides, and restart the timer."
+      "Hold while counting aloud, then lower and repeat the same count on the other side."
     ],
-    "counting": "20 seconds per side. The timer covers one side at a time.",
+    "counting": "Count aloud to {amount} at a steady pace on each side. Lower and switch sides between holds.",
     "equipment": "bodyweight"
   },
   {
@@ -200,14 +201,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Alternating leg kicks",
     "category": "Core",
     "amount": 20,
-    "unit": "seconds",
+    "unit": "reps",
     "description": "Make small alternating leg kicks while lying on your back.",
     "steps": [
       "Lie on your back and lift both legs, with a slight knee bend if needed.",
       "Raise one leg a little as the other lowers, then alternate.",
       "Keep your lower back down; lift your legs higher if your back starts to arch."
     ],
-    "counting": "Continue for the displayed time, not a rep count.",
+    "counting": "Each leg kick is 1 rep; {amount} total ({split}).",
     "equipment": "bodyweight"
   },
   {
@@ -293,14 +294,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Plank knee drives",
     "category": "Cardio",
     "amount": 30,
-    "unit": "seconds",
+    "unit": "reps",
     "description": "Alternate knee drives from a high plank.",
     "steps": [
       "Place hands under shoulders and extend both legs.",
       "Bring one knee toward your chest, then send it back.",
       "Alternate knees at a steady pace, keeping hips from bouncing."
     ],
-    "counting": "Continue for the displayed time, not a rep count.",
+    "counting": "Each knee drive is 1 rep; {amount} total ({split}).",
     "equipment": "bodyweight"
   },
   {
@@ -324,15 +325,15 @@ export const exercises: readonly Exercise[] = [
     "name": "Bear Crawl",
     "plainName": "Knees-off-the-ground crawl",
     "category": "Full body",
-    "amount": 20,
-    "unit": "seconds",
+    "amount": null,
+    "unit": "distance",
     "description": "Crawl with knees hovering just above the ground.",
     "steps": [
       "Start on all fours and lift your knees a few inches.",
       "Take a small step with one hand and the opposite foot.",
-      "Alternate limbs forward and backward within a clear space."
+      "Choose a clear path and alternate limbs until you reach your chosen finish point."
     ],
-    "counting": "Crawl for the displayed time; steps are not counted.",
+    "counting": "Pick your distance. Choose a finish point, then crawl to it with controlled steps.",
     "equipment": "bodyweight"
   },
   {
@@ -361,14 +362,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Face-up crawling",
     "category": "Full body",
     "amount": 20,
-    "unit": "seconds",
+    "unit": "steps",
     "description": "Take small steps on your hands and feet with hips lifted.",
     "steps": [
       "Sit with knees bent and hands on the floor behind you, fingers in a comfortable direction.",
       "Lift your hips just off the ground, keeping your shoulders supported.",
       "Take small steps forward and backward with hands and feet in a clear space."
     ],
-    "counting": "Crawl for the displayed time; stop if your wrists or shoulders hurt.",
+    "counting": "Each foot step is 1 count; {amount} total ({split}). Stop if your wrists or shoulders hurt.",
     "equipment": "bodyweight"
   },
   {
@@ -639,14 +640,14 @@ export const exercises: readonly Exercise[] = [
     "plainName": "Overhead block carry",
     "category": "Full body",
     "amount": 20,
-    "unit": "seconds",
+    "unit": "steps",
     "description": "Walk with the block held steadily overhead.",
     "steps": [
       "Press the block overhead using a secure two-hand grip and brace your middle.",
       "Keep arms extended and ribs down as you walk slowly along a clear, level path.",
       "Use short, controlled steps; lower the block to your chest before turning or resting."
     ],
-    "counting": "Walk for the displayed time; no set distance is required.",
+    "counting": "Each footstep is 1 count; walk {amount} short, controlled steps total.",
     "equipment": "block",
     "aliases": [
       "Overhead Carry",

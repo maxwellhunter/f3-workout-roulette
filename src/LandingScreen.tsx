@@ -63,7 +63,7 @@ export function LandingScreen({ deckCount, equipmentName, favoritesOnly, status,
 
       <View style={styles.actions}>
         <Pressable accessibilityRole="button" accessibilityLabel={needsDeck ? 'Choose another deck' : 'Draw workout'}
-          accessibilityHint={needsDeck ? 'Open deck settings and browse available moves.' : 'Draw your first exercise. Timers wait for you to press Start.'}
+          accessibilityHint={needsDeck ? 'Open deck settings and browse available moves.' : 'Draw your first exercise and start when you’re ready.'}
           accessibilityState={{ disabled: actionDisabled, busy: status === 'loading' }}
           disabled={actionDisabled} onPress={needsDeck ? onChooseDeck : onDraw}
           testID="landing-draw" style={({ pressed }) => [styles.primary, pressed && styles.primaryPressed, actionDisabled && styles.disabled]}>

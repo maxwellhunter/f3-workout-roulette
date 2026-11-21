@@ -111,19 +111,20 @@ export function WorkoutLibrary({ currentId, repRange, disabled, favorites, exclu
         ListEmptyComponent={<Text style={styles.empty} accessibilityLiveRegion="polite">{emptyMessage}</Text>}
         renderItem={({ item }) => {
           const dose = libraryDose(item, repRange);
+          const doseText = `${dose.count} ${dose.unit}`.trim();
           const saved = favorites.ids.includes(item.id);
           const excluded = exclusions.ids.includes(item.id);
           const chooseDisabled = disabled || excluded;
           return (
             <View style={[styles.row, currentId === item.id && styles.current]}>
-              <Pressable accessibilityRole="button" accessibilityLabel={`Choose ${item.name}, ${item.plainName}, ${dose.count} ${dose.unit}`}
+              <Pressable accessibilityRole="button" accessibilityLabel={`Choose ${item.name}, ${item.plainName}, ${doseText}`}
                 accessibilityHint={excluded ? 'Restore this move before choosing it.' : 'Loads this move on your workout screen.'}
                 accessibilityState={{ selected: currentId === item.id, disabled: chooseDisabled }}
                 disabled={chooseDisabled} onPress={() => onChoose(item)} testID={`library-workout-${item.id}`}
                 style={({ pressed }) => [styles.choose, pressed && styles.pressed]}>
                 <Text style={[styles.name, excluded && styles.excludedName]}>{item.name}</Text>
                 <Text style={styles.plainName} numberOfLines={1}>{item.plainName}</Text>
-                <Text style={[styles.dose, excluded && styles.excludedText]}>{excluded ? 'Excluded from draws' : `${dose.count} ${dose.unit}`}</Text>
+                <Text style={[styles.dose, excluded && styles.excludedText]}>{excluded ? 'Excluded from draws' : doseText}</Text>
               </Pressable>
               <Pressable accessibilityRole="button" accessibilityLabel={`${saved ? 'Remove' : 'Save'} ${item.name} ${saved ? 'from' : 'to'} favorites`}
                 accessibilityState={{ selected: saved, disabled: favoriteDisabled, busy: favorites.phase === 'saving' }}

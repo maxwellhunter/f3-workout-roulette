@@ -1,5 +1,5 @@
 import type { EquipmentFilter, Exercise } from './exercises';
-import type { RepRange } from './repRanges';
+import { doseUnitLabel, type RepRange } from './repRanges.ts';
 
 const normalize = (text: string) => text.toLowerCase().replace(/[^a-z0-9]/g, '');
 
@@ -27,10 +27,8 @@ export function searchExercises(catalog: readonly Exercise[], query: string, equ
 
 /** Preview the selected range without rolling a count until a workout is chosen. */
 export function libraryDose(exercise: Exercise, range: RepRange | null): { count: string; unit: string } {
-  const timed = exercise.unit === 'seconds';
-  const count = timed || range === null ? String(exercise.amount)
+  if (exercise.unit === 'distance') return { count: 'Pick your distance', unit: '' };
+  const count = range === null ? String(exercise.amount)
     : range.min === range.max ? String(range.min) : `${range.min}–${range.max}`;
-  const unit = timed ? (exercise.id === 'side-plank' ? 'sec / side' : 'sec')
-    : exercise.unit === 'per side' ? 'reps / side' : 'reps';
-  return { count, unit };
+  return { count, unit: doseUnitLabel(exercise.unit) };
 }

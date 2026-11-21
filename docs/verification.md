@@ -169,3 +169,14 @@ The no-scroll result applies to the main workout view at the tested sizes and de
 - All 49 existing tests, TypeScript, ESLint, and production web/iOS/Android exports pass. The entrance animation is gated by prefers-reduced-motion; it runs once on web and does not add native animation dependencies.
 - Screenshots: `phone-landing-redesign.jpg` (402 × 874) and `phone-landing-compact.jpg` (320 × 568).
 - These are browser viewport checks and native compilation checks. Physical iPhone Home Screen rendering, including the previously reported system top-edge blur, remains unverified; this change does not claim to fix that iOS overlay.
+
+## Counted workouts and open-distance Bear Crawl — November 21, 2026
+
+- Converted all eight former timed cards: Flutter Kicks and Mountain Climbers use reps; Al Gore and Chilcutts use spoken count holds; Side Plank uses a spoken count per side; Crab Walk and Rifle Carry use footsteps; Bear Crawl says “Pick your distance.” All 36 exercise IDs remain unchanged.
+- Rep ranges apply to every numeric count in multiples of five. Bear Crawl has a null amount and ignores numeric ranges. Browse previews, the workout card, instructions, and accessibility labels share the same units. Removed the countdown controls, chime implementation, unused audio asset, and audio dependency.
+- Passed all 47 current tests, TypeScript, ESLint, and production web/iOS/Android exports. Tests cover all converted units, range endpoints, odd alternating totals, per-side hold instructions, open-distance previews, and stable preference IDs. Native exports verify compilation only.
+- At 320 × 568, selected all seven converted numeric cards through Browse with a fixed 100-count range. Every card displayed 100 with the correct reps/count/steps unit, had no timer button, and fit its 418px workout area without scrolling.
+- Flutter Kicks selected from the 20–30 range displayed 30 reps; How to explained 30 total and 15 per side. Side Plank's instructions changed from a spoken 100 count per side to 20 when Default was restored.
+- Bear Crawl displayed “Pick your distance” both in the compact Browse row and on its card. Changing its range to a fixed 100 left no numeric target. The card fit without scrolling at 320 × 568 (418px workout area) and 390 × 844 (694px workout area).
+- Verified desktop rendering at 1280 × 720. Reset viewport overrides and reloaded the local preview after testing; no favorites or exclusions were changed.
+- Screenshots: `phone-flutter-reps.jpg`, `phone-bear-distance.jpg`, and `phone-spoken-hold.jpg`, all at 320 × 568. Earlier timer verification and screenshots above describe historical releases; the current deck has no timers.

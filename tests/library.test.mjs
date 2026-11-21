@@ -61,7 +61,7 @@ test('removing the last favorite or restoring the last exclusion empties only th
   assert.equal(filterLibraryExercises(exercises, 'all', [], []).length, 36);
 });
 
-test('dose previews use the selected rep range and preserve timed and per-side units', () => {
+test('dose previews apply the range to reps, holds, and steps with the correct unit', () => {
   const merkins = exercises.find(({ id }) => id === 'merkins');
   const lunges = exercises.find(({ id }) => id === 'reverse-lunges');
   const sidePlank = exercises.find(({ id }) => id === 'side-plank');
@@ -69,9 +69,18 @@ test('dose previews use the selected rep range and preserve timed and per-side u
   assert.deepEqual(libraryDose(merkins, { min: 20, max: 30 }), { count: '20–30', unit: 'reps' });
   assert.deepEqual(libraryDose(merkins, { min: 50, max: 50 }), { count: '50', unit: 'reps' });
   assert.deepEqual(libraryDose(lunges, { min: 20, max: 30 }), { count: '20–30', unit: 'reps / side' });
-  assert.deepEqual(libraryDose(sidePlank, { min: 50, max: 100 }), { count: String(sidePlank.amount), unit: 'sec / side' });
-  for (const exercise of exercises.filter(({ unit, id }) => unit === 'seconds' && id !== 'side-plank')) {
-    assert.deepEqual(libraryDose(exercise, { min: 50, max: 100 }), { count: String(exercise.amount), unit: 'sec' });
+  assert.deepEqual(libraryDose(sidePlank, { min: 50, max: 100 }), { count: '50–100', unit: 'count / side' });
+  for (const [id, unit] of [['flutter-kicks', 'reps'], ['mountain-climbers', 'reps'], ['al-gore', 'count hold'], ['forearm-plank', 'count hold'], ['crab-walk', 'steps'], ['rifle-carry', 'steps']]) {
+    const exercise = exercises.find((item) => item.id === id);
+    assert.deepEqual(libraryDose(exercise, { min: 50, max: 100 }), { count: '50–100', unit });
+    assert.deepEqual(libraryDose(exercise, null), { count: String(exercise.amount), unit });
+  }
+});
+
+test('Bear Crawl always previews Pick your distance without a number or unit', () => {
+  const bear = exercises.find(({ id }) => id === 'bear-crawl');
+  for (const range of [null, { min: 20, max: 30 }, { min: 100, max: 100 }]) {
+    assert.deepEqual(libraryDose(bear, range), { count: 'Pick your distance', unit: '' });
   }
 });
 

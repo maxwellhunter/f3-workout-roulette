@@ -3,7 +3,7 @@ import test from 'node:test';
 import { readFileSync } from 'node:fs';
 import { DEFAULT_EQUIPMENT_FILTER, drawExercise, exercises, filterExercises, knownExerciseIds, reconcileExercise } from '../src/exercises.ts';
 
-test('deck has 36 unique, fully described exercises with positive doses', () => {
+test('deck has 36 unique, fully described exercises with counts in fives or open distance', () => {
   assert.equal(exercises.length, 36);
   assert.equal(new Set(exercises.map((exercise) => exercise.id)).size, 36);
   assert.equal(new Set(exercises.map((exercise) => exercise.category)).size, 5);
@@ -14,10 +14,27 @@ test('deck has 36 unique, fully described exercises with positive doses', () => 
     assert.equal(exercise.steps.length, 3);
     assert.ok(exercise.steps.every((step) => step.length > 20));
     assert.ok(exercise.counting.length > 15);
-    assert.ok(Number.isInteger(exercise.amount) && exercise.amount > 0);
-    if (exercise.unit !== 'seconds') assert.equal(exercise.amount % 5, 0, `${exercise.id} must use reps in fives`);
-    assert.ok(['reps', 'seconds', 'per side'].includes(exercise.unit));
+    if (exercise.unit === 'distance') {
+      assert.equal(exercise.amount, null);
+    } else {
+      assert.ok(Number.isInteger(exercise.amount) && exercise.amount > 0);
+      assert.equal(exercise.amount % 5, 0, `${exercise.id} must count in fives`);
+    }
+    assert.ok(['reps', 'per side', 'count', 'count per side', 'steps', 'distance'].includes(exercise.unit));
+    assert.doesNotMatch([exercise.description, ...exercise.steps, exercise.counting].join(' '), /timer|seconds|displayed time/i);
   }
+});
+
+test('former timed moves use repetitions, spoken holds, steps, or a chosen crawl distance', () => {
+  const expected = {
+    'flutter-kicks': 'reps', 'mountain-climbers': 'reps',
+    'al-gore': 'count', 'forearm-plank': 'count', 'side-plank': 'count per side',
+    'crab-walk': 'steps', 'rifle-carry': 'steps', 'bear-crawl': 'distance',
+  };
+  for (const [id, unit] of Object.entries(expected)) {
+    assert.equal(exercises.find((exercise) => exercise.id === id).unit, unit, id);
+  }
+  assert.deepEqual(exercises.filter(({ unit }) => unit === 'distance').map(({ id }) => id), ['bear-crawl']);
 });
 
 test('every card is reachable on the first draw, including both range edges', () => {

@@ -1,17 +1,15 @@
-import { useEffect, useReducer, useRef, useState } from 'react';
-import { AccessibilityInfo, AppState, Platform, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { useRef, useState } from 'react';
+import { AccessibilityInfo, Platform, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { HapticPressable as Pressable } from './src/HapticPressable';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { DEFAULT_EQUIPMENT_FILTER, drawExercise, exercises, filterExercises, reconcileExercise, type EquipmentFilter, type Exercise } from './src/exercises';
-import { countdownReducer, createCountdown } from './src/countdown';
-import { useCompletionChime } from './src/useCompletionChime';
 import { useExclusions, useFavorites } from './src/useFavorites';
 import { PreferenceNotice } from './src/PreferenceNotice';
 import { RepRangePicker } from './src/RepRangePicker';
 import { Sheet } from './src/Sheet';
 import { WorkoutLibrary } from './src/WorkoutLibrary';
-import { countingText, repAmount, repRangeLabel, sameRepRange, type RepRange } from './src/repRanges';
+import { countingText, doseUnitLabel, repAmount, repRangeLabel, sameRepRange, type RepRange } from './src/repRanges';
 import { colors } from './src/theme';
 import { LandingScreen } from './src/LandingScreen';
 import './src/mobile.css';
@@ -37,21 +35,20 @@ function Instructions({ exercise, onClose }: { exercise: Exercise; onClose: () =
           </View>
         ))}
         <Text style={styles.counting}>{countingText(exercise)}</Text>
-        {exercise.unit === 'seconds' && <Text style={styles.sheetNote}>Tap Start when ready. A chime sounds at zero. Keep the app open and media volume up.</Text>}
       </View>
     </Sheet>
   );
 }
 
-function NextButton({ disabled, onlyMove, secondary, onPress }: {
-  disabled: boolean; onlyMove: boolean; secondary?: boolean; onPress: () => void;
+function NextButton({ disabled, onlyMove, onPress }: {
+  disabled: boolean; onlyMove: boolean; onPress: () => void;
 }) {
   return (
     <Pressable accessibilityRole="button" accessibilityLabel="Draw workout"
       accessibilityHint={onlyMove ? 'This is your only available move. Restore a move in Browse or choose another deck.' : 'Shows a different exercise from your selected deck.'}
       accessibilityState={{ disabled }} disabled={disabled} onPress={onPress}
-      style={({ pressed }) => [styles.action, secondary ? styles.secondaryAction : styles.primaryAction, pressed && styles.actionPressed, disabled && styles.disabled]}>
-      <Text style={[styles.actionText, secondary && styles.secondaryText]}>{onlyMove ? 'Only move' : 'Next move'}</Text>
+      style={({ pressed }) => [styles.action, styles.primaryAction, pressed && styles.actionPressed, disabled && styles.disabled]}>
+      <Text style={styles.actionText}>{onlyMove ? 'Only move' : 'Next move'}</Text>
     </Pressable>
   );
 }
@@ -63,37 +60,6 @@ function Workout({ exercise, saved, favoriteDisabled, saving, onlyMove, drawDisa
   const { height, width } = useWindowDimensions();
   const compact = height < 700 || width < 350;
   const [instructionsOpen, setInstructionsOpen] = useState(false);
-  const [timer, dispatch] = useReducer(countdownReducer, exercise.amount, createCountdown);
-  const timed = exercise.unit === 'seconds';
-  const perSide = exercise.id === 'side-plank';
-  const { arm, play, error: soundError } = useCompletionChime();
-  const chimed = useRef(false);
-
-  useEffect(() => {
-    if (timed && timer.status === 'complete' && !chimed.current) {
-      chimed.current = true;
-      void play();
-    }
-  }, [timed, timer.status, play]);
-
-  useEffect(() => {
-    if (timer.status !== 'running') return;
-    const tick = () => dispatch({ type: 'tick', now: Date.now() });
-    const interval = setInterval(tick, 100);
-    const subscription = AppState.addEventListener('change', (state) => { if (state === 'active') tick(); });
-    return () => { clearInterval(interval); subscription.remove(); };
-  }, [timer.status]);
-
-  const statusText = timer.status === 'complete' ? (perSide ? 'Switch sides' : 'Time’s up!')
-    : timer.status === 'running' ? 'Running' : timer.status === 'paused' ? 'Paused' : 'Ready';
-  const timerAction = timer.status === 'running' ? 'Pause' : timer.status === 'paused' ? 'Resume'
-    : timer.status === 'complete' ? 'Restart' : 'Start';
-
-  useEffect(() => {
-    if (timed && timer.status === 'complete' && Platform.OS !== 'web') {
-      AccessibilityInfo.announceForAccessibility(perSide ? 'Side complete. Switch sides and restart.' : 'Time’s up.');
-    }
-  }, [timed, timer.status, perSide]);
 
   return (
     <View style={styles.workout}>
@@ -117,32 +83,22 @@ function Workout({ exercise, saved, favoriteDisabled, saving, onlyMove, drawDisa
               <Text accessibilityRole="header" accessibilityLiveRegion="polite" style={[styles.exerciseName, compact && styles.compactName]} testID="exercise-name">{exercise.name}</Text>
               <Text style={styles.plainName} testID="exercise-plain-name">{exercise.plainName}</Text>
             </View>
-            <View style={styles.dose}>
-              <Text style={[styles.amount, compact && styles.compactAmount]} testID="exercise-amount"
-                accessibilityLabel={timed ? `${Math.ceil(timer.remainingMs / 1000)} seconds remaining` : undefined}>
-                {timed ? Math.ceil(timer.remainingMs / 1000) : exercise.amount}
-              </Text>
-              <View style={styles.doseLabel}>
-                <Text style={styles.unit}>{perSide ? 'SEC / SIDE' : exercise.unit === 'seconds' ? 'SECONDS' : exercise.unit === 'per side' ? 'REPS / SIDE' : 'REPS'}</Text>
-                {timed && <Text accessibilityLiveRegion="polite" testID="timer-status" style={styles.timerStatus}>{statusText}</Text>}
+            {exercise.unit === 'distance' ? (
+              <Text style={[styles.distance, compact && styles.compactDistance]} testID="exercise-distance">Pick your distance</Text>
+            ) : (
+              <View style={styles.dose}>
+                <Text style={[styles.amount, compact && styles.compactAmount]} testID="exercise-amount">{exercise.amount}</Text>
+                <View style={styles.doseLabel}>
+                  <Text style={styles.unit} testID="exercise-unit">{doseUnitLabel(exercise.unit).toUpperCase()}</Text>
+                </View>
               </View>
-            </View>
+            )}
             {!compact && <Text style={styles.description} testID="exercise-description">{exercise.description}</Text>}
-            {soundError && <Text style={styles.errorText} accessibilityRole="alert">Sound unavailable. Keep the timer visible.</Text>}
           </View>
         </View>
       </ScrollView>
       <View style={styles.actions} testID="workout-actions">
-        {timed && (
-          <Pressable accessibilityRole="button" accessibilityLabel={`${timerAction} timer`}
-            onPress={() => {
-              if (timer.status !== 'running') { chimed.current = false; arm(); }
-              dispatch({ type: timer.status === 'running' ? 'pause' : 'start', now: Date.now() });
-            }} style={({ pressed }) => [styles.action, styles.primaryAction, pressed && styles.actionPressed]}>
-            <Text style={styles.actionText}>{timerAction}</Text>
-          </Pressable>
-        )}
-        <NextButton disabled={drawDisabled} onlyMove={onlyMove} secondary={timed} onPress={onDraw} />
+        <NextButton disabled={drawDisabled} onlyMove={onlyMove} onPress={onDraw} />
       </View>
       {instructionsOpen && <Instructions exercise={exercise} onClose={() => setInstructionsOpen(false)} />}
     </View>
@@ -172,7 +128,7 @@ export default function App() {
   const drawDisabled = selectionDisabled || deck.length === 0 || onlyMove || (favoritesOnly && favoritesUnavailable);
   const emptyDeck = deck.length === 0 && !exclusionsUnavailable;
   const equipmentName = equipment === 'all' ? 'All equipment' : equipment === 'block' ? 'Block' : 'Bodyweight';
-  const displayedExercise = exercise && amount !== null ? { ...exercise, amount } : exercise;
+  const displayedExercise = exercise && exercise.unit !== 'distance' && amount !== null ? { ...exercise, amount } : exercise;
 
   function show(next: Exercise | undefined) {
     if (next?.id === exercise?.id) return;
@@ -181,7 +137,8 @@ export default function App() {
     setExercise(next ?? null);
     setAmount(nextAmount);
     if (next && Platform.OS !== 'web') {
-      AccessibilityInfo.announceForAccessibility(`${next.name}. ${nextAmount} ${next.unit}. ${next.description}`);
+      const dose = next.unit === 'distance' ? 'Pick your distance' : `${nextAmount} ${doseUnitLabel(next.unit)}`;
+      AccessibilityInfo.announceForAccessibility(`${next.name}. ${dose}. ${next.description}`);
     }
   }
   function changeRepRange(nextRange: RepRange | null) {
@@ -339,21 +296,19 @@ const styles = StyleSheet.create({
   dose: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 20 },
   amount: { color: colors.accent, fontSize: 120, lineHeight: 124, fontWeight: '900', letterSpacing: -5, fontVariant: ['tabular-nums'] },
   compactAmount: { fontSize: 92, lineHeight: 96, letterSpacing: -3 },
+  distance: { color: colors.accent, fontSize: 40, lineHeight: 44, fontWeight: '900', letterSpacing: -0.7 },
+  compactDistance: { fontSize: 32, lineHeight: 36, letterSpacing: -0.5 },
   doseLabel: { gap: 6, flexShrink: 1 },
   unit: { color: colors.accent, fontSize: 16, lineHeight: 22, fontWeight: '800', letterSpacing: 0.6 },
-  timerStatus: { color: colors.ink, fontSize: 16, lineHeight: 22, fontWeight: '600' },
   description: { color: colors.muted, fontSize: 17, lineHeight: 24 },
   actions: { flexDirection: 'row', gap: 8 },
   action: { flex: 1, minHeight: 64, borderRadius: 12, paddingHorizontal: 8, paddingVertical: 16, alignItems: 'center', justifyContent: 'center', borderWidth: 2 },
   primaryAction: { backgroundColor: colors.accent, borderColor: colors.accent },
-  secondaryAction: { backgroundColor: colors.surface, borderColor: colors.line },
   actionText: { color: colors.background, fontSize: 20, lineHeight: 26, fontWeight: '900', textAlign: 'center' },
-  secondaryText: { color: colors.ink, fontSize: 18 },
   actionPressed: { opacity: 0.8 },
   pressed: { backgroundColor: '#34402A' },
   disabled: { opacity: 0.45 },
   accentText: { color: colors.accent },
-  errorText: { color: '#FFD5B5', fontSize: 15, lineHeight: 21 },
   equipmentOptions: { flexDirection: 'row', gap: 6 },
   equipmentOption: { flex: 1, minHeight: 56, paddingHorizontal: 4, paddingVertical: 12, borderRadius: 10, borderWidth: 2, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' },
   optionText: { color: colors.ink, fontSize: 14, lineHeight: 20, fontWeight: '700', textAlign: 'center' },
