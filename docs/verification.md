@@ -1,4 +1,15 @@
-# Verification — browser button haptics
+# Verification — simplified landing screen
+
+November 20, 2026.
+
+- Reduced the opening screen to a 72px Draw a move button and a muted 44px Change deck link. Removed the duplicate header selector, numbered flow, example workout details, editable summary panel, and entrance animation. The remaining card stack is decorative, non-interactive, and hidden from assistive technology.
+- Verified zero horizontal/vertical overflow at 320 × 568 and 402 × 874. In 568 × 320 landscape, both footer actions remain visible (Draw: y188–260; Change deck: y268–312), with content scrolling available above them.
+- Change deck opens the existing panel with equipment, reps, favorites, and Browse. Selecting Block updates the quiet equipment label. Drawing then displays a block workout and restores the header's deck selector.
+- Empty Favorites shows exactly one button, Choose your deck; it opens settings and F3 Classics restores the ordinary landing screen. The normal landing accessibility tree contains only Draw workout and Change workout deck buttons.
+- TypeScript, ESLint, and web/iOS/Android exports pass. No browser warnings or errors occurred. Catalog, storage, rep selection, and timer logic are unchanged; this follow-up was verified through the affected UI flows.
+- Screenshot: `phone-landing-simple.jpg`. Physical iPhone Home Screen rendering and the previously reported system blur remain unverified.
+
+# Previous verification — browser button haptics
 
 November 20, 2026.
 

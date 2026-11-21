@@ -228,7 +228,7 @@ export default function App() {
             <View style={styles.brand} accessibilityLabel="F3 Workout Roulette">
               <Text style={styles.logo}>F3</Text><Text style={styles.brandName}>ROULETTE</Text>
             </View>
-            <Pressable accessibilityRole="button" accessibilityLabel="Choose workout deck"
+            {displayedExercise && <Pressable accessibilityRole="button" accessibilityLabel="Choose workout deck"
               accessibilityHint={`${equipmentName}, ${favoritesOnly ? 'favorites' : 'F3 Classics'}, ${deck.length} moves, ${repRangeLabel(repRange)} reps`}
               accessibilityState={{ expanded: panel === 'deck' }} onPress={() => setPanel('deck')}
               style={({ pressed }) => [styles.deckButton, pressed && styles.pressed]}>
@@ -236,7 +236,7 @@ export default function App() {
               <View style={styles.chevronIcon} accessible={false} pointerEvents="none">
                 <View style={styles.chevron} />
               </View>
-            </Pressable>
+            </Pressable>}
           </View>
           {favorites.phase === 'save-error' && <PreferenceNotice label="favorites" list={favorites} />}
           <PreferenceNotice label="exclusions" list={exclusions} />
@@ -245,7 +245,7 @@ export default function App() {
               favoriteDisabled={saving || favoritesUnavailable} saving={saving} onlyMove={onlyMove}
               drawDisabled={drawDisabled} onFavorite={() => void togglePreference('favorite', displayedExercise.id)} onDraw={draw} />
           ) : (
-            <LandingScreen deck={deck} equipmentName={equipmentName} favoritesOnly={favoritesOnly} repRange={repRange}
+            <LandingScreen deckCount={deck.length} equipmentName={equipmentName} favoritesOnly={favoritesOnly}
               status={exclusions.phase === 'loading' || (favoritesOnly && favorites.phase === 'loading') ? 'loading'
                 : exclusions.phase === 'load-error' || (favoritesOnly && favorites.phase === 'load-error') ? 'unavailable'
                   : emptyDeck ? 'empty' : 'ready'}
