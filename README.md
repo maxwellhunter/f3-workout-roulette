@@ -29,6 +29,7 @@ Open **http://localhost:8087**. Node 24.x is recommended to match production. No
 
 ## Behavior
 
+- **Opening screen:** “Show up. Shake it up.” leads into a clearly labeled example card from the active deck, a compact Draw → Work → Repeat guide, an editable deck summary, and a pinned 72px first-draw button. The example uses the selected rep range without drawing a random count, respects exclusions, and retains per-side/timed units. The card entrance animation respects reduced-motion preferences. Compact and full layouts account for the available safe-area height; empty decks lead back to settings instead of a disabled dead end.
 - **Home Screen icon:** a bold charcoal F3 mark on the app's lime background, with an opaque 180px Apple touch icon, 192px/512px web app icons, and 16px/32px/48px browser favicons. In iPhone Safari, use Share → Add to Home Screen; the saved name is “F3 Roulette” and it opens in standalone mode. The editable artwork is `assets/icon.svg`; the HTML metadata and web app manifest live in `public/`. This does not add offline caching or background timers.
 - **Mobile layout:** All 36 workout cards fit without scrolling at 320 × 568 with default text sizing. Main and workout-row controls are at least 52px tall; primary actions are at least 64px. Compact Browse filters and Back retain at least 44px tap targets. The layout uses the usable browser height, with scrolling available for enlarged text or landscape. On compact screens, the F3 name and plain-English subtitle replace the longer summary, which remains in How to. Detailed instructions can scroll independently while Done stays visible.
 - **Button haptics on web:** enabled buttons request a light tap response. Android browsers with the Vibration API use one 10ms pulse. Supported iPhone Safari versions use feedback from a trusted tap on an invisible switch label; [WebKit documents switch haptics from iOS 18](https://webkit.org/blog/15865/webkit-features-in-safari-18-0/#switch). The label approach is informed by [ios-haptics](https://github.com/tijnjh/ios-haptics). Disabled buttons and background scrims do not trigger it. Unsupported devices keep ordinary controls without an error or extra UI. Feedback depends on the browser, hardware, and phone settings; physical-device feel has not been verified. This is button feedback, not a timer vibration alarm. Native controls are unchanged.
@@ -63,6 +64,7 @@ Browser verification and screenshots are recorded in `docs/verification.md`. Nat
 ## Main files
 
 - `App.tsx`: screen, equipment/deck controls, favorite interaction, how-to and timer UI.
+- `src/LandingScreen.tsx`: responsive opening screen, live deck preview, and empty/loading states.
 - `src/mobile.css`: web viewport sizing, touch behavior, and keyboard focus outlines.
 - `src/HapticPressable.web.tsx` and `src/buttonHaptics.ts`: browser tap feedback, with a native Pressable re-export in `src/HapticPressable.tsx`.
 - `src/exercises.ts`: bundled catalog, equipment metadata, filtering and uniform selection.

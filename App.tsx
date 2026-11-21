@@ -13,6 +13,7 @@ import { Sheet } from './src/Sheet';
 import { WorkoutLibrary } from './src/WorkoutLibrary';
 import { countingText, repAmount, repRangeLabel, sameRepRange, type RepRange } from './src/repRanges';
 import { colors } from './src/theme';
+import { LandingScreen } from './src/LandingScreen';
 import './src/mobile.css';
 
 const equipmentOptions: readonly { value: EquipmentFilter; label: string; accessibilityLabel: string }[] = [
@@ -244,22 +245,11 @@ export default function App() {
               favoriteDisabled={saving || favoritesUnavailable} saving={saving} onlyMove={onlyMove}
               drawDisabled={drawDisabled} onFavorite={() => void togglePreference('favorite', displayedExercise.id)} onDraw={draw} />
           ) : (
-            <View style={styles.workout}>
-              <ScrollView style={styles.workoutScroll} contentContainerStyle={styles.workoutContent} testID="workout-scroll">
-                <View style={[styles.card, styles.emptyCard]} testID="workout-card">
-                  <Text style={styles.emptyEyebrow}>{favoritesOnly ? 'YOUR FAVORITES' : `F3 CLASSICS · ${deck.length} MOVES`}</Text>
-                  <Text accessibilityRole="header" style={styles.emptyTitle}>{emptyDeck ? 'No moves\nin this deck.' : 'Ready\nto work?'}</Text>
-                  <Text style={styles.description}>{emptyDeck ? (favoritesOnly ? 'Star a move in Browse, or restore an excluded favorite.' : 'Restore a move in Browse, or choose another deck.') : equipment === 'block' ? 'Grab your block. Draw your first move.' : 'One move at a time. Start when you’re ready.'}</Text>
-                </View>
-              </ScrollView>
-              <View style={styles.actions}>
-                <Pressable accessibilityRole="button" accessibilityLabel={emptyDeck ? 'Choose another deck' : 'Draw workout'}
-                  disabled={emptyDeck ? saving : drawDisabled} onPress={emptyDeck ? () => setPanel('deck') : draw}
-                  style={({ pressed }) => [styles.action, styles.primaryAction, pressed && styles.actionPressed, (emptyDeck ? saving : drawDisabled) && styles.disabled]}>
-                  <Text style={styles.actionText}>{emptyDeck ? 'Choose a deck' : exclusions.phase === 'loading' ? 'Loading…' : 'Draw a move →'}</Text>
-                </Pressable>
-              </View>
-            </View>
+            <LandingScreen deck={deck} equipmentName={equipmentName} favoritesOnly={favoritesOnly} repRange={repRange}
+              status={exclusions.phase === 'loading' || (favoritesOnly && favorites.phase === 'loading') ? 'loading'
+                : exclusions.phase === 'load-error' || (favoritesOnly && favorites.phase === 'load-error') ? 'unavailable'
+                  : emptyDeck ? 'empty' : 'ready'}
+              disabled={drawDisabled} saving={saving} onDraw={draw} onChooseDeck={() => setPanel('deck')} />
           )}
         </View>
         {panel !== null && (
@@ -363,9 +353,6 @@ const styles = StyleSheet.create({
   pressed: { backgroundColor: '#34402A' },
   disabled: { opacity: 0.45 },
   accentText: { color: colors.accent },
-  emptyCard: { justifyContent: 'center', gap: 20 },
-  emptyEyebrow: { color: colors.accent, fontSize: 12, lineHeight: 18, fontWeight: '800', letterSpacing: 1 },
-  emptyTitle: { color: colors.ink, fontSize: 44, lineHeight: 47, fontWeight: '900', letterSpacing: -1.2 },
   errorText: { color: '#FFD5B5', fontSize: 15, lineHeight: 21 },
   equipmentOptions: { flexDirection: 'row', gap: 6 },
   equipmentOption: { flex: 1, minHeight: 56, paddingHorizontal: 4, paddingVertical: 12, borderRadius: 10, borderWidth: 2, borderColor: colors.line, alignItems: 'center', justifyContent: 'center' },

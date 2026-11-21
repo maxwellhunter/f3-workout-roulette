@@ -147,3 +147,14 @@ November 20, 2026. Local preview: http://localhost:8087. Live release details ar
 ## Limits
 
 The no-scroll result applies to the main workout view at the tested sizes and default text scaling. Detailed instructions intentionally scroll. Enlarged text and short landscape screens have a scroll fallback, with the primary controls outside that scroll area. Physical-device storage and audio have not been exercised. Timers/chimes require the app to remain open; there is no lock-screen/background alarm. Favorites are local to each browser origin or native app installation.
+
+## Landing screen redesign — November 20, 2026
+
+- Replaced the oversized empty workout card with a two-line headline, a stacked example-card illustration, a short Draw / Work / Repeat guide, a deck editor shortcut, and a pinned 72px first-draw button. No new dependencies or external assets.
+- Verified zero vertical or horizontal overflow in the opening scroll area at 320 × 568, 375 × 667, and 402 × 874. At 568 × 320 landscape, the scroll fallback works and the primary button stays within the viewport (top 240px, bottom 312px).
+- At 320 × 568, changing to Block and 50–100 reps updated the example card, dose range, and 14-move summary without drawing a workout. The full “Curls for the Girls” name remained readable. The preview shares Browse's tested dose formatter, including timed and per-side counts.
+- Empty Favorites shows a clear explanation and an active Choose your deck action. Verified it fits without scrolling and opens settings; switching back to F3 Classics restores the normal opening view.
+- The first-draw action loaded Mountain Climbers with 30 seconds and status Ready; the timer still requires Start. No browser warnings or errors were recorded.
+- All 49 existing tests, TypeScript, ESLint, and production web/iOS/Android exports pass. The entrance animation is gated by prefers-reduced-motion; it runs once on web and does not add native animation dependencies.
+- Screenshots: `phone-landing-redesign.jpg` (402 × 874) and `phone-landing-compact.jpg` (320 × 568).
+- These are browser viewport checks and native compilation checks. Physical iPhone Home Screen rendering, including the previously reported system top-edge blur, remains unverified; this change does not claim to fix that iOS overlay.
