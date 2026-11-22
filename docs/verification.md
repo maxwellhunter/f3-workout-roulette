@@ -219,3 +219,11 @@ The no-scroll result applies to the main workout view at the tested sizes and de
 - Passed TypeScript, ESLint, all 51 existing tests, and the production web export. At 320 × 480, 320 × 568, and 390 × 844, the normal landing has no horizontal or vertical scroll overflow. The corresponding scroll areas measure 296 × 268, 296 × 356, and 366 × 632.
 - Changing equipment from Bodyweight to Block updated the displayed count from 22 to 14. Empty Favorites fit at 320 × 568 and Choose your deck reopened settings; selecting F3 Classics restored the normal screen. Draw a move loaded Bear Crawl and its distance prompt correctly.
 - No browser console errors were recorded. Reloaded to defaults, reset the viewport override, and closed the temporary preview. Screenshot: `phone-landing-plain.jpg` at 320 × 568. Earlier landing screenshots show superseded designs.
+
+## Landing typography and roulette dial — November 21, 2026
+
+- Kept the existing words, deck summary, and two actions. “move.” now uses larger italic type beside a quiet, cropped roulette dial with one red index mark. The dial uses native views with no new dependencies, images, fonts, animation, or stacked cards.
+- The graphic cannot receive pointer input and is hidden from accessibility trees. The heading is exposed as “Your next move.” The normal browser accessibility tree still contains only Draw workout and Change workout deck buttons. Enlarged text and viewports narrower than 320px use the freely wrapping heading; the decoration's clipping is separate from the text.
+- Passed TypeScript, ESLint, and the production web export. No exercise, count, preference, or drawing logic changed.
+- At 320 × 480, 320 × 568, and 390 × 844, the landing fits without horizontal or vertical overflow, and Draw remains 72px high. Also checked the narrow-screen fallback at 280 × 568 without overflow. The empty Favorites explanation and its single recovery action still work; switching back to F3 Classics and pressing Draw loaded Plank Jacks in cadence.
+- No browser console errors were recorded. Reloaded to defaults, reset the viewport, and closed the temporary preview. Screenshots: `phone-landing-dial.jpg` (320 × 568) and `phone-landing-dial-large.jpg` (390 × 844). Native screen-reader behavior was not exercised on a physical device.

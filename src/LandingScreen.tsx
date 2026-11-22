@@ -5,6 +5,24 @@ import { colors } from './theme';
 
 type LandingStatus = 'ready' | 'loading' | 'unavailable' | 'empty';
 
+const dialTicks = Array.from({ length: 24 }, (_, index) => index);
+
+function DrawDial({ compact }: { compact: boolean }) {
+  return (
+    <View style={styles.dialWindow} pointerEvents="none"
+      aria-hidden accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+      <View style={[styles.dial, compact && styles.compactDial]}>
+        <View style={styles.dialInner} />
+        {dialTicks.map((tick) => (
+          <View key={tick} style={[styles.tickOrbit, { transform: [{ rotate: `${tick * 15}deg` }] }]}>
+            <View style={[styles.tick, tick % 3 === 0 && styles.majorTick, tick === 21 && styles.selectedTick]} />
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+}
+
 export function LandingScreen({ deckCount, equipmentName, favoritesOnly, status, disabled, saving, onDraw, onChooseDeck }: {
   deckCount: number;
   equipmentName: string;
@@ -19,6 +37,8 @@ export function LandingScreen({ deckCount, equipmentName, favoritesOnly, status,
   const insets = useSafeAreaInsets();
   const compact = height - insets.top - insets.bottom < 810 || width < 350 || fontScale > 1.2;
   const ready = status === 'ready';
+  // Let enlarged text and narrow viewports use the freely wrapping heading.
+  const displayHeading = ready && width >= 320 && fontScale <= 1;
   const needsDeck = status === 'empty' || status === 'unavailable';
   const actionDisabled = needsDeck ? saving : disabled;
   const heading = ready ? 'Your next\nmove.'
@@ -35,9 +55,19 @@ export function LandingScreen({ deckCount, equipmentName, favoritesOnly, status,
       <ScrollView style={styles.scroll} contentContainerStyle={[styles.content, compact && styles.compactContent]}
         showsVerticalScrollIndicator={false} testID="landing-scroll">
         <View style={styles.intro}>
-          <Text accessibilityRole="header" style={[styles.headline, compact && styles.compactHeadline]}>
-            {heading}
-          </Text>
+          {displayHeading ? (
+            <View style={[styles.hero, compact && styles.compactHero]}>
+              <DrawDial compact={compact} />
+              <View style={styles.title} accessible accessibilityRole="header" accessibilityLabel="Your next move.">
+                <Text style={styles.lead}>Your next</Text>
+                <Text style={[styles.move, compact && styles.compactMove]}>move.</Text>
+              </View>
+            </View>
+          ) : (
+            <Text accessibilityRole="header" style={[styles.headline, compact && styles.compactHeadline]}>
+              {heading}
+            </Text>
+          )}
           <Text style={styles.detail} accessibilityLiveRegion="polite" testID="landing-detail">
             {detail}
           </Text>
@@ -69,7 +99,21 @@ const styles = StyleSheet.create({
   scroll: { flex: 1, minHeight: 0 },
   content: { flexGrow: 1, justifyContent: 'center', paddingVertical: 40, paddingHorizontal: 12 },
   compactContent: { paddingVertical: 24, paddingHorizontal: 6 },
-  intro: { gap: 24 },
+  intro: { gap: 20 },
+  hero: { minHeight: 240, justifyContent: 'center' },
+  compactHero: { minHeight: 150 },
+  title: { alignSelf: 'flex-start', paddingRight: 8 },
+  lead: { color: colors.muted, fontSize: 22, lineHeight: 30, fontWeight: '600' },
+  move: { color: colors.ink, fontSize: 124, lineHeight: 128, fontWeight: '900', fontStyle: 'italic', letterSpacing: -6, paddingRight: 8 },
+  compactMove: { fontSize: 98, lineHeight: 104, letterSpacing: -5 },
+  dialWindow: { position: 'absolute', inset: 0, overflow: 'hidden' },
+  dial: { position: 'absolute', width: 290, height: 290, borderRadius: 145, borderWidth: 1, borderColor: colors.line, right: -105, top: -16, opacity: 0.65 },
+  compactDial: { width: 222, height: 222, borderRadius: 111, right: -76, top: -28 },
+  dialInner: { position: 'absolute', inset: 28, borderRadius: 999, borderWidth: 1, borderColor: colors.line, opacity: 0.45 },
+  tickOrbit: { position: 'absolute', inset: 0 },
+  tick: { position: 'absolute', top: 8, left: '50%', marginLeft: -1, width: 2, height: 7, backgroundColor: colors.line },
+  majorTick: { height: 14 },
+  selectedTick: { height: 22, width: 4, marginLeft: -2, backgroundColor: colors.accent },
   headline: { color: colors.ink, fontSize: 68, lineHeight: 70, fontWeight: '800', letterSpacing: -2.5 },
   compactHeadline: { fontSize: 52, lineHeight: 55, letterSpacing: -1.8 },
   detail: { color: colors.muted, fontSize: 16, lineHeight: 24, borderTopWidth: 1, borderTopColor: colors.line, paddingTop: 16 },
