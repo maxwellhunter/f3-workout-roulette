@@ -1,18 +1,30 @@
-import type { ReactNode } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useState, type ReactNode } from 'react';
+import { Animated, KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { HapticPressable as Pressable } from './HapticPressable';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors } from './theme';
+import { useRevealMotion } from './useRevealMotion';
 
-export function Sheet({ title, onClose, children, scrollable = true, fullHeight = false, compactHeader = false, closeLabel = 'Done', closeAccessibilityLabel }: {
-  title: string; onClose: () => void; children: ReactNode; scrollable?: boolean; fullHeight?: boolean;
+const AnimatedSafeAreaView = Animated.createAnimatedComponent(SafeAreaView);
+
+export function Sheet({ title, onClose, children, reducedMotion, scrollable = true, fullHeight = false, compactHeader = false, closeLabel = 'Done', closeAccessibilityLabel }: {
+  title: string; onClose: () => void; children: ReactNode; reducedMotion: boolean; scrollable?: boolean; fullHeight?: boolean;
   compactHeader?: boolean; closeLabel?: string; closeAccessibilityLabel?: string;
 }) {
+  const [shown, setShown] = useState(false);
+  const backdrop = useRevealMotion({ duration: 200, reducedMotion, ready: shown });
+  const reveal = useRevealMotion({ duration: 200, reducedMotion, ready: shown, replayKey: title });
+
   return (
-    <Modal transparent visible animationType="fade" onRequestClose={onClose} accessibilityLabel={title}>
+    <Modal transparent visible animationType="none" onShow={() => setShown(true)} onRequestClose={onClose} accessibilityLabel={title}>
       <KeyboardAvoidingView style={styles.scrim} behavior={Platform.OS === 'ios' ? 'padding' : 'height'} enabled={Platform.OS !== 'web'}>
+        <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.backdrop, { opacity: backdrop }]} testID="sheet-backdrop" />
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessible={false} />
-        <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.sheet, fullHeight && styles.fullHeight]} accessibilityViewIsModal>
+        <AnimatedSafeAreaView edges={['bottom', 'left', 'right']} accessibilityViewIsModal testID="sheet-panel"
+          style={[styles.sheet, fullHeight && styles.fullHeight, {
+            opacity: reveal,
+            transform: [{ translateY: reveal.interpolate({ inputRange: [0, 1], outputRange: [12, 0] }) }],
+          }]}>
           <View style={[styles.header, compactHeader && styles.compactHeader]}>
             <Text accessibilityRole="header" style={[styles.title, compactHeader && styles.compactTitle]}>{title}</Text>
             <Pressable accessibilityRole="button" accessibilityLabel={closeAccessibilityLabel ?? `Close ${title.toLowerCase()}`} onPress={onClose}
@@ -25,14 +37,15 @@ export function Sheet({ title, onClose, children, scrollable = true, fullHeight 
               {children}
             </ScrollView>
           ) : <View style={styles.body}>{children}</View>}
-        </SafeAreaView>
+        </AnimatedSafeAreaView>
       </KeyboardAvoidingView>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  scrim: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.8)', paddingTop: 20 },
+  scrim: { flex: 1, justifyContent: 'flex-end', paddingTop: 20 },
+  backdrop: { backgroundColor: 'rgba(0,0,0,0.8)' },
   sheet: { maxHeight: '94%', width: '100%', maxWidth: 500, alignSelf: 'center', backgroundColor: colors.surface, borderTopLeftRadius: 20, borderTopRightRadius: 20, borderWidth: 1, borderColor: colors.line },
   fullHeight: { height: '94%' },
   header: { padding: 16, flexDirection: 'row', gap: 8, alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, borderBottomColor: colors.line },

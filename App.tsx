@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { AccessibilityInfo, Platform, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { AccessibilityInfo, Animated, Platform, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { HapticPressable as Pressable } from './src/HapticPressable';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
@@ -12,6 +12,8 @@ import { WorkoutLibrary } from './src/WorkoutLibrary';
 import { countingText, doseUnitLabel, repAmount, repRangeLabel, sameRepRange, type RepRange } from './src/repRanges';
 import { colors } from './src/theme';
 import { LandingScreen } from './src/LandingScreen';
+import { useReducedMotion } from './src/useReducedMotion';
+import { useRevealMotion } from './src/useRevealMotion';
 import './src/mobile.css';
 
 const equipmentOptions: readonly { value: EquipmentFilter; label: string; accessibilityLabel: string }[] = [
@@ -20,9 +22,9 @@ const equipmentOptions: readonly { value: EquipmentFilter; label: string; access
   { value: 'block', label: 'Block', accessibilityLabel: 'Block equipment' },
 ];
 
-function Instructions({ exercise, onClose }: { exercise: Exercise; onClose: () => void }) {
+function Instructions({ exercise, onClose, reducedMotion }: { exercise: Exercise; onClose: () => void; reducedMotion: boolean }) {
   return (
-    <Sheet title="How to" onClose={onClose}>
+    <Sheet title="How to" onClose={onClose} reducedMotion={reducedMotion}>
       <View testID="how-to-steps" style={styles.instructions}>
         <Text style={styles.sheetExercise}>{exercise.name}</Text>
         <Text style={styles.sheetMeta}>{exercise.plainName} · {exercise.category}</Text>
@@ -53,13 +55,14 @@ function NextButton({ disabled, onlyMove, onPress }: {
   );
 }
 
-function Workout({ exercise, saved, favoriteDisabled, saving, onlyMove, drawDisabled, onFavorite, onDraw }: {
+function Workout({ exercise, saved, favoriteDisabled, saving, onlyMove, drawDisabled, onFavorite, onDraw, reducedMotion }: {
   exercise: Exercise; saved: boolean; favoriteDisabled: boolean; saving: boolean;
-  onlyMove: boolean; drawDisabled: boolean; onFavorite: () => void; onDraw: () => void;
+  onlyMove: boolean; drawDisabled: boolean; onFavorite: () => void; onDraw: () => void; reducedMotion: boolean;
 }) {
   const { height, width } = useWindowDimensions();
   const compact = height < 700 || width < 350;
   const [instructionsOpen, setInstructionsOpen] = useState(false);
+  const reveal = useRevealMotion({ duration: 150, reducedMotion });
 
   return (
     <View style={styles.workout}>
@@ -78,7 +81,7 @@ function Workout({ exercise, saved, favoriteDisabled, saving, onlyMove, drawDisa
               <Text accessible={false} style={[styles.star, saved && styles.selectedText]}>{saved ? '★' : '☆'}</Text>
             </Pressable>
           </View>
-          <View style={styles.moveContent}>
+          <Animated.View style={[styles.moveContent, { opacity: reveal }]} testID="workout-reveal">
             <View style={styles.moveHeading}>
               <Text accessibilityRole="header" accessibilityLiveRegion="polite" style={[styles.exerciseName, compact && styles.compactName]} testID="exercise-name">{exercise.name}</Text>
               <Text style={styles.plainName} testID="exercise-plain-name">{exercise.plainName}</Text>
@@ -94,18 +97,19 @@ function Workout({ exercise, saved, favoriteDisabled, saving, onlyMove, drawDisa
               </View>
             )}
             {!compact && <Text style={styles.description} testID="exercise-description">{exercise.description}</Text>}
-          </View>
+          </Animated.View>
         </View>
       </ScrollView>
       <View style={styles.actions} testID="workout-actions">
         <NextButton disabled={drawDisabled} onlyMove={onlyMove} onPress={onDraw} />
       </View>
-      {instructionsOpen && <Instructions exercise={exercise} onClose={() => setInstructionsOpen(false)} />}
+      {instructionsOpen && <Instructions exercise={exercise} onClose={() => setInstructionsOpen(false)} reducedMotion={reducedMotion} />}
     </View>
   );
 }
 
 export default function App() {
+  const reducedMotion = useReducedMotion();
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [equipment, setEquipment] = useState<EquipmentFilter>(DEFAULT_EQUIPMENT_FILTER);
@@ -199,6 +203,7 @@ export default function App() {
           <PreferenceNotice label="exclusions" list={exclusions} />
           {displayedExercise ? (
             <Workout key={displayedExercise.id} exercise={displayedExercise} saved={favorites.ids.includes(displayedExercise.id)}
+              reducedMotion={reducedMotion}
               favoriteDisabled={saving || favoritesUnavailable} saving={saving} onlyMove={onlyMove}
               drawDisabled={drawDisabled} onFavorite={() => void togglePreference('favorite', displayedExercise.id)} onDraw={draw} />
           ) : (
@@ -211,6 +216,7 @@ export default function App() {
         </View>
         {panel !== null && (
           <Sheet title={panel === 'deck' ? 'Choose your deck' : 'Browse workouts'}
+            reducedMotion={reducedMotion}
             onClose={() => setPanel(panel === 'library' ? 'deck' : null)} scrollable={panel === 'deck'} fullHeight={panel === 'library'} compactHeader={panel === 'library'}
             closeLabel={panel === 'library' ? 'Back' : 'Done'} closeAccessibilityLabel={panel === 'library' ? 'Back to choose your deck' : undefined}>
             {panel === 'library' ? (
