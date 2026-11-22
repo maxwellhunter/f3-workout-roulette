@@ -1,24 +1,26 @@
-import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { Animated, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { HapticPressable as Pressable } from './HapticPressable';
 import { colors } from './theme';
+import { useDrawSpin } from './useDrawSpin';
 
 type LandingStatus = 'ready' | 'loading' | 'unavailable' | 'empty';
 
 const dialTicks = Array.from({ length: 24 }, (_, index) => index);
 
-function DrawDial({ compact }: { compact: boolean }) {
+function DrawDial({ compact, rotation }: { compact: boolean; rotation: Animated.Value }) {
   return (
     <View style={styles.dialWindow} pointerEvents="none"
       aria-hidden accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-      <View style={[styles.dial, compact && styles.compactDial]}>
+      <Animated.View testID="roulette-dial" style={[styles.dial, compact && styles.compactDial,
+        { transform: [{ rotate: rotation.interpolate({ inputRange: [0, 1], outputRange: ['0deg', '360deg'] }) }] }]}>
         <View style={styles.dialInner} />
         {dialTicks.map((tick) => (
           <View key={tick} style={[styles.tickOrbit, { transform: [{ rotate: `${tick * 15}deg` }] }]}>
             <View style={[styles.tick, tick % 3 === 0 && styles.majorTick, tick === 21 && styles.selectedTick]} />
           </View>
         ))}
-      </View>
+      </Animated.View>
     </View>
   );
 }
@@ -40,7 +42,9 @@ export function LandingScreen({ deckCount, equipmentName, favoritesOnly, status,
   // Let enlarged text and narrow viewports use the freely wrapping heading.
   const displayHeading = ready && width >= 320 && fontScale <= 1;
   const needsDeck = status === 'empty' || status === 'unavailable';
-  const actionDisabled = needsDeck ? saving : disabled;
+  const { rotation, spinning, start } = useDrawSpin(onDraw, ready && !disabled, displayHeading);
+  const actionUnavailable = needsDeck ? saving : disabled;
+  const actionDisabled = actionUnavailable || spinning;
   const heading = ready ? 'Your next\nmove.'
     : status === 'loading' ? 'Loading\nyour deck.'
       : status === 'empty' ? 'No moves\nyet.' : 'Deck\nunavailable.';
@@ -57,7 +61,7 @@ export function LandingScreen({ deckCount, equipmentName, favoritesOnly, status,
         <View style={styles.intro}>
           {displayHeading ? (
             <View style={[styles.hero, compact && styles.compactHero]}>
-              <DrawDial compact={compact} />
+              <DrawDial compact={compact} rotation={rotation} />
               <View style={styles.title} accessible accessibilityRole="header" accessibilityLabel="Your next move.">
                 <Text style={styles.lead}>Your next</Text>
                 <Text style={[styles.move, compact && styles.compactMove]}>move.</Text>
@@ -77,14 +81,16 @@ export function LandingScreen({ deckCount, equipmentName, favoritesOnly, status,
       <View style={styles.actions}>
         <Pressable accessibilityRole="button" accessibilityLabel={needsDeck ? 'Choose another deck' : 'Draw workout'}
           accessibilityHint={needsDeck ? 'Open deck settings and browse available moves.' : 'Draw your first exercise and start when you’re ready.'}
-          accessibilityState={{ disabled: actionDisabled, busy: status === 'loading' }}
-          disabled={actionDisabled} onPress={needsDeck ? onChooseDeck : onDraw}
-          testID="landing-draw" style={({ pressed }) => [styles.primary, pressed && styles.primaryPressed, actionDisabled && styles.disabled]}>
+          accessibilityState={{ disabled: actionDisabled, busy: spinning || status === 'loading' }}
+          aria-busy={spinning || status === 'loading'}
+          disabled={actionDisabled} onPress={needsDeck ? onChooseDeck : start}
+          testID="landing-draw" style={({ pressed }) => [styles.primary, (pressed || spinning) && styles.primaryPressed, actionUnavailable && styles.disabled]}>
           <Text style={styles.primaryText}>{needsDeck ? 'Choose your deck' : status === 'loading' ? 'Getting ready…' : 'Draw a move'}</Text>
         </Pressable>
         {!needsDeck && <Pressable accessibilityRole="button" accessibilityLabel="Change workout deck"
           accessibilityHint={`Currently ${equipmentName}${favoritesOnly ? ', favorites' : ''}. Choose equipment, rep range, favorites, or browse workouts.`}
-          onPress={onChooseDeck} style={({ pressed }) => [styles.changeDeck, pressed && styles.changeDeckPressed]}>
+          accessibilityState={{ disabled: spinning }} disabled={spinning}
+          onPress={onChooseDeck} style={({ pressed }) => [styles.changeDeck, pressed && styles.changeDeckPressed, spinning && styles.disabled]}>
           <Text style={styles.selection}>{equipmentName}</Text>
           <Text style={styles.separator} accessible={false}>·</Text>
           <Text style={styles.changeDeckText}>Change deck</Text>
